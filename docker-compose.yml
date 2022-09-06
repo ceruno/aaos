@@ -1,8 +1,8 @@
 version: '3.4'
 
 services:
-  aaos:
-    image: aaos
+  api:
+    image: api
     build:
       context: .
       dockerfile: ./Dockerfile
