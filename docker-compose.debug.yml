@@ -10,3 +10,19 @@ services:
     ports:
       - 8000:8000
       - 5678:5678
+    env_file:
+      - ./.env/.dev
+    depends_on:
+      - redis
+      - db
+  db:
+    image: postgres:14-alpine
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env/.dev
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  pg_data:
