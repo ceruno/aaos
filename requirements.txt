@@ -1,0 +1,7 @@
+aiohttp
+asyncio
+celery
+django
+djangorestframework
+flower
+psycopg2
