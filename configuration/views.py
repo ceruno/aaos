@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
-from configuration.serializers import UserSerializer, GroupSerializer, SentinelOneSerializer
-from configuration.models import SentinelOne
+from configuration.serializers import UserSerializer, GroupSerializer, SentinelOneSerializer, ElasticSerializer, FreshServiceSerializer
+from configuration.models import Elastic, FreshService, SentinelOne
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -28,4 +28,20 @@ class SentinelOneViewSet(viewsets.ModelViewSet):
     """
     queryset = SentinelOne.objects.all()
     serializer_class = SentinelOneSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ElasticViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SentinelOne entries to be viewed or edited.
+    """
+    queryset = Elastic.objects.all()
+    serializer_class = ElasticSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class FreshServiceViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SentinelOne entries to be viewed or edited.
+    """
+    queryset = FreshService.objects.all()
+    serializer_class = FreshServiceSerializer
     permission_classes = [permissions.IsAuthenticated]
