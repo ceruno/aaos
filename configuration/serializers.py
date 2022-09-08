@@ -24,8 +24,14 @@ class SentinelOneSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'console_url', 'token']
 
     def create(self, validated_data):
-        validated_data['token'] = f.encrypt(bytes(validated_data['token'], 'utf-8'))
+        validated_data['token'] = (f.encrypt(bytes(validated_data['token'], 'utf-8'))).decode()
         return SentinelOne.objects.create(**validated_data)
+
+    # def to_representation(self, instance):
+    #     return {
+    #         'console_url': instance.console_url,
+    #         'token': f.decrypt(instance.token)
+    #     }
 
 class ElasticSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -21,6 +21,28 @@ services:
       - ./.env/.dev
   redis:
     image: redis:7-alpine
+  celery:
+    image: api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["celery", "-A", "api", "worker", "--loglevel=info"]
+    env_file:
+      - ./.env/.dev
+    depends_on:
+      - redis
+  flower:
+    image: api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5555:5555
+    command: ["celery", "-A", "api", "flower", "--port=5555"]
+    env_file:
+      - ./.env/.dev
+    depends_on:
+      - redis
 
 volumes:
   pg_data:
