@@ -12,11 +12,9 @@ f = Fernet(key)
 def getAgents():
     s1_config = list(Model.objects.all().values())
     agents = []
-    index_counter = 0
     for i in s1_config:
         token = (f.decrypt(i['token'])).decode()
         session = S1(i['console_url'], token, 'Agents')
-        task = asyncio.create_task(session.getAgentInfo())
-        agents.append(task)
-        index_counter += 1
-    return(asyncio.gather(*agents))
+        task = asyncio.run(session.getAgentInfo())
+        agents.extend(task)
+    return(agents)
