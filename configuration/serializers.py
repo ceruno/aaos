@@ -39,7 +39,7 @@ class ElasticSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'elastic_url', 'user', 'password']
 
     def create(self, validated_data):
-        validated_data['password'] = f.encrypt(bytes(validated_data['password'], 'utf-8'))
+        validated_data['password'] = (f.encrypt(bytes(validated_data['password'], 'utf-8'))).decode()
         return Elastic.objects.create(**validated_data)
 
 class FreshServiceSerializer(serializers.HyperlinkedModelSerializer):
@@ -48,5 +48,5 @@ class FreshServiceSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'service_url', 'api_key', 'group_id', 'requester_id', 'requester_email', 'requester_phone', 'ansprechperson']
 
     def create(self, validated_data):
-        validated_data['api_key'] = f.encrypt(bytes(validated_data['api_key'], 'utf-8'))
+        validated_data['api_key'] = (f.encrypt(bytes(validated_data['api_key'], 'utf-8'))).decode()
         return SentinelOne.objects.create(**validated_data)

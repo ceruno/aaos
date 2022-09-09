@@ -3,7 +3,9 @@ asyncio
 celery
 cryptography
 django
+django-celery-beat
 djangorestframework
+elasticsearch
 flower
 gunicorn
 psycopg2-binary

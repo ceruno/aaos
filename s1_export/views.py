@@ -7,7 +7,7 @@ from .tasks import getAgents
 @permission_classes([IsAuthenticated])
 def agents(request):
     if request.method == 'POST':
-        task = getAgents().delay()
+        task = getAgents.delay()
         result = task.id
         spapi = {'message': 'Task added', 'task_id': result, 'post': request.data}
         return Response(spapi)

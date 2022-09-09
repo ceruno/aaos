@@ -22,7 +22,7 @@ class SentinelOne:
             cursor = goal['pagination']['nextCursor']
             return(result, cursor)
 
-    async def getAgentInfo(self):
+    async def getAgents(self):
 
         self.endpoint = '/web/api/v2.1/agents'
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))

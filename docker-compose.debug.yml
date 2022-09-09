@@ -13,7 +13,7 @@ services:
     env_file:
       - ./.env/.dev
     depends_on:
-      - redis
+      - broker
       - db
   db:
     image: postgres:14-alpine
@@ -23,9 +23,9 @@ services:
       - 5432:5432
     env_file:
       - ./.env/.dev
-  redis:
+  broker:
     image: redis:7-alpine
-  celery:
+  worker:
     image: aaos
     build:
       context: .
@@ -34,8 +34,18 @@ services:
     env_file:
       - ./.env/.dev
     depends_on:
-      - redis
-  flower:
+      - broker
+  beat:
+    image: aaos
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["celery", "-A", "api", "beat", "--loglevel=info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]
+    env_file:
+      - ./.env/.dev
+    depends_on:
+      - broker
+  monitor:
     image: aaos
     build:
       context: .
@@ -46,7 +56,7 @@ services:
     env_file:
       - ./.env/.dev
     depends_on:
-      - redis
+      - broker
 
 volumes:
   pg_data:
