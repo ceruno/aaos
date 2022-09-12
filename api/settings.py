@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_celery_beat',
-    'configuration.apps.ConfigurationConfig',
-    's1_export.apps.S1ExportConfig'
+    'config.apps.ConfigConfig',
+    'exports.sentinelone.apps.SentinelOneConfig',
 ]
 
 MIDDLEWARE = [

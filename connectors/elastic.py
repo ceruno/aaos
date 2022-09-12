@@ -1,7 +1,7 @@
 from datetime import datetime
 from elasticsearch import Elasticsearch, helpers
 
-class Elastic:
+class ElasticAPI:
 
     def __init__(self, url, user, password):
 

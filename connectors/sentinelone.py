@@ -2,7 +2,7 @@ import aiohttp
 from datetime import datetime
 import pytz
 
-class SentinelOne:
+class SentinelOneAPI:
 
     def __init__(self, url, token, reason):
 
@@ -29,11 +29,11 @@ class SentinelOne:
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
             agents = []
-            result = await SentinelOne.get(self, session)
+            result = await SentinelOneAPI.get(self, session)
             agents.extend(result[0])
             while result[1] != None:
                 self.params.update({'cursor': result[1]})
-                result = await SentinelOne.get(self, session)
+                result = await SentinelOneAPI.get(self, session)
                 agents.extend(result[0])
         
         for i in agents:

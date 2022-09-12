@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ConfigurationConfig(AppConfig):
+class FreshServiceConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'configuration'
+    name = 'exports.freshservice'

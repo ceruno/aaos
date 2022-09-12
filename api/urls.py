@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 from rest_framework import routers
-from configuration import views
-from s1_export import views as s1_views
+from config import views
+from exports.sentinelone import views as s1_views
 
 
 router_main = routers.DefaultRouter()
