@@ -32,10 +32,11 @@ router_config.register(r'fresh', views.FreshServiceViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router_main.urls)),
+    path('users/', include(router_main.urls)),
     path('config/', include(router_config.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('test/', s1_views.agents)
+    path('exports/main', s1_views.main),
+    path('exports/bySite', s1_views.bySite),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
