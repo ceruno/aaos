@@ -14,7 +14,7 @@ class SentinelOneAPI:
         self.params = {'limit': '1000'}
         if self.item == 'groups':
             self.params = {'limit': '200'}
-        if self.item == 'exclusions':
+        if self.item in ['exclusions', 'restrictions']:
             self.params.update({'includeChildren': 'true', 'includeParents': 'true'})
         if self.item == 'installed-applications':
             self.params.update({'riskLevelsNin': 'none'})
@@ -37,15 +37,23 @@ class SentinelOneAPI:
                     "managementConsoleUrl": self.url
                 }
                 i.update(values)
+
+                if self.item == 'activities':
+                    if "current" in i["data"]:
+                        i["data"]["current"] = str(i["data"]["current"])
+                    if "newValue" in i["data"]:
+                        i["data"]["newValue"] = str(i["data"]["newValue"])
+                    if "previous" in i["data"]:
+                        i["data"]["previous"] = str(i["data"]["previous"])
                 
             return(result, cursor)
 
     async def getAll(self):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        results = []
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
-            results = []
             result = await self.get(session)
             results.extend(result[0])
 
@@ -56,16 +64,16 @@ class SentinelOneAPI:
         
         return(results)
 
-    async def getDelta(self, delta):
+    async def getByDelta(self, delta):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
         time = self.tstamp - timedelta(minutes=int(delta))
-        time_utc =time.astimezone(pytz.timezone("UTC"))
+        time_utc = time.astimezone(pytz.timezone("UTC"))
         time_str = time_utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         self.params.update({'createdAt__gte': time_str})
+        results = []
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
-            results = []
             result = await self.get(session)
             results.extend(result[0])
 
@@ -89,24 +97,26 @@ class SentinelOneAPI:
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
         self.params.update({'siteIds': site['id']})
+        results = []
+        
+        if not ((self.item == 'installed-applications') and (site['sku'] == 'Core')):
 
-        async with aiohttp.ClientSession(headers=self.headers) as session:
-            results = []
-            result = await self.get(session)
-            results.extend(result[0])
-
-            while result[1] != None:
-                self.params.update({'cursor': result[1]})
+            async with aiohttp.ClientSession(headers=self.headers) as session:
                 result = await self.get(session)
                 results.extend(result[0])
+
+                while result[1] != None:
+                    self.params.update({'cursor': result[1]})
+                    result = await self.get(session)
+                    results.extend(result[0])
+                
+                for i in results:
+                    values = {
+                        'accountId': site['accountId'],
+                        'accountName': site['accountName'],
+                        'siteId': site['id'],
+                        'siteName': site['name']
+                    }
+                    i.update(values)
             
-            for i in results:
-                values = {
-                    'accountId': site['accountId'],
-                    'accountName': site['accountName'],
-                    'siteId': site['id'],
-                    'siteName': site['name']
-                }
-                i.update(values)
-        
         return(results)

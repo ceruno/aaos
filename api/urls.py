@@ -35,8 +35,8 @@ urlpatterns = [
     path('users/', include(router_main.urls)),
     path('config/', include(router_config.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('exports/main', s1_views.main),
-    path('exports/bySite', s1_views.bySite),
+    path('exports/s1', s1_views.main),
+    path('exports/s1-debug', s1_views.debug),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

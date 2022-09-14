@@ -9,48 +9,34 @@ import os
 key = bytes(os.environ.get("ENCRYPTION_KEY"), 'utf-8')
 f = Fernet(key)
 
+s1_config = SentinelOneModel.objects.all().values()
+elastic_config = ElasticModel.objects.all().values()
+
 @shared_task
 def export(args):
-
-    s1_config = list(SentinelOneModel.objects.all().values())
-    elastic_config = list(ElasticModel.objects.all().values())
-    
+ 
     results = []
-    for i in s1_config:
+    for i in list(s1_config):
 
         token = (f.decrypt(i['token'])).decode()
         s1_session = SentinelOneAPI(i['console_url'], token, args['item'])
         
-        task = asyncio.run(s1_session.getAll())
         if 'timedelta' in args.keys():
-            task = asyncio.run(s1_session.getDelta(args['timedelta']))
-        if ('limit' in args.keys()) and (args['limit'] == 'true'):
+            task = asyncio.run(s1_session.getByDelta(args['timedelta']))
+        elif ('limit' in args.keys()) and (args['limit'] == 'true'):
             task = asyncio.run(s1_session.get1000())
+        else:
+            task = asyncio.run(s1_session.getAll())
         results.extend(task)
 
-    if not 'pipeline' in args.keys():
-        args['pipeline'] = None
-    
-    timestamp = True
-    if args['item'] == 'activities':
-        timestamp = False
-    
-    for i in elastic_config:
-        password = (f.decrypt(i['password'])).decode()
-        elastic_session = ElasticAPI(i['elastic_url'], i['user'], password, timestamp, args['index'], args['pipeline'])
-        task = elastic_session.write(results)
-    
-    return('done')
+    return(write(args, results))
 
 @shared_task
 def exportBySite(args):
     
-    s1_config = list(SentinelOneModel.objects.all().values())
-    elastic_config = list(ElasticModel.objects.all().values())
-
     sites = []
     results = []
-    for i in s1_config:
+    for i in list(s1_config):
 
         token = (f.decrypt(i['token'])).decode()
         s1_session = SentinelOneAPI(i['console_url'], token, 'sites')
@@ -63,6 +49,10 @@ def exportBySite(args):
             task2 = asyncio.run(s1_session.getBySite(site))
             results.extend(task2)
 
+    return(write(args, results))
+
+def write(args, results):
+
     if not 'pipeline' in args.keys():
         args['pipeline'] = None
     
@@ -70,9 +60,9 @@ def exportBySite(args):
     if args['item'] == 'activities':
         timestamp = False
     
-    for i in elastic_config:
+    for i in list(elastic_config):
         password = (f.decrypt(i['password'])).decode()
         elastic_session = ElasticAPI(i['elastic_url'], i['user'], password, timestamp, args['index'], args['pipeline'])
-        task = elastic_session.write(results)
+        result = elastic_session.write(results)
 
-    return('done')
+    return(result)

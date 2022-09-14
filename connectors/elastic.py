@@ -1,4 +1,5 @@
 from elasticsearch import Elasticsearch, helpers
+import traceback
 
 class ElasticAPI:
 
@@ -43,4 +44,5 @@ class ElasticAPI:
                 helpers.bulk(self.session,data)
                 break
             except Exception:
-                return
+                return(traceback.format_exc())
+        return('done')
