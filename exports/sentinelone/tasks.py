@@ -9,11 +9,10 @@ import os
 key = bytes(os.environ.get("ENCRYPTION_KEY"), 'utf-8')
 f = Fernet(key)
 
-s1_config = SentinelOneModel.objects.all().values()
-elastic_config = ElasticModel.objects.all().values()
-
 @shared_task
 def export(args):
+
+    s1_config = SentinelOneModel.objects.all().values()
  
     results = []
     for i in list(s1_config):
@@ -33,6 +32,8 @@ def export(args):
 
 @shared_task
 def exportBySite(args):
+
+    s1_config = SentinelOneModel.objects.all().values()
     
     sites = []
     results = []
@@ -52,6 +53,8 @@ def exportBySite(args):
     return(write(args, results))
 
 def write(args, results):
+
+    elastic_config = ElasticModel.objects.all().values()
 
     if not 'pipeline' in args.keys():
         args['pipeline'] = None

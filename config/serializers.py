@@ -49,4 +49,4 @@ class FreshServiceSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         validated_data['api_key'] = (f.encrypt(bytes(validated_data['api_key'], 'utf-8'))).decode()
-        return SentinelOneModel.objects.create(**validated_data)
+        return FreshServiceModel.objects.create(**validated_data)

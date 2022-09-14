@@ -19,6 +19,7 @@ from django.urls import path, include
 from rest_framework import routers
 from config import views
 from exports.sentinelone import views as s1_views
+from exports.freshservice import views as fresh_views
 
 
 router_main = routers.DefaultRouter()
@@ -37,6 +38,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('exports/s1', s1_views.main),
     path('exports/s1-debug', s1_views.debug),
+    path('exports/fresh', fresh_views.main),
+    path('exports/fresh-debug', fresh_views.debug),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
