@@ -18,6 +18,8 @@ class FreshServiceAPI:
         self.email = config["requester_email"]
         self.phone = config["requester_phone"]
         self.ansprechperson = config["ansprechperson"]
+        if item == 'tickets':
+            self.params.update({'include': 'department,requester,stats,tags'})
 
     async def get(self, session):
 
@@ -38,7 +40,7 @@ class FreshServiceAPI:
 
             return(result, link)
 
-    async def getAll(self):
+    async def getAll(self, groups = None):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
         results = []
@@ -53,98 +55,51 @@ class FreshServiceAPI:
                 self.params.update({'page': page})
                 result = await self.get(session)
                 results.extend(result[0])
+
+            if groups != None:
+                groups_id = {id['id']: id for id in groups}
+                for i in results:
+                    if i['group_id'] != None:
+                        values = {
+                            'group_name': groups_id[i['group_id']]['name'],
+                        }
+                    else:
+                        values = {
+                            'group_name': None,
+                        }
+                    i.update(values)            
         
         return(results)
 
-    # def getGroups(self):
-    #     print("Getting Groups from " + self.portal)
-    #     s = requests.Session()
-    #     basic = HTTPBasicAuth(self.api_key, ":X")
-    #     r = s.get(self.portal + "/api/v2/groups", auth = basic)
-    #     w = vars(r)["_content"]
-    #     encoding = "utf-8"
-    #     p = str(w, encoding)
-    #     res = json.loads(p)
-    #     goal = res["groups"]
-    #     groups = {id["id"]: id for id in goal}
-    #     return(groups)       
-
-    # def getTickets(self):
-    #     groups = self.getGroups()
-    #     print("Getting Tickets from " + self.portal)
-    #     s = requests.Session()
-    #     basic = HTTPBasicAuth(self.api_key, ":X")
-    #     tickets = []
-    #     page = 1
-    #     while page <= 10:
-    #         r = s.get(self.portal + "/api/v2/tickets?include=department,requester,stats,tags&per_page=100&page=" + str(page), auth = basic)
-    #         # r = s.get(self.portal + "/api/v2/tickets/filter?query=\"group_id:" + str(self.gid) + " AND tag:SentinelOne\"", auth = basic)
-    #         w = vars(r)["_content"]
-    #         encoding = "utf-8"
-    #         p = str(w, encoding)
-    #         res = json.loads(p)
-    #         goal = res["tickets"]
-    #         for i in goal:
-    #             if i["group_id"] is not None:
-    #                 values = {
-    #                     "group_name": groups[i["group_id"]]["name"],
-    #                     "@timestamp": self.tstamp
-    #                 }
-    #             else:
-    #                 values = {
-    #                     "group_name": None,
-    #                     "@timestamp": self.tstamp
-    #                 }
-    #             i.update(values)
-    #         page += 1
-    #         tickets.extend(goal)
-    #     return(tickets, self.tstamp_str)
-
-    # def createTicketPayload(self, subject, description, tags=[], priority=1, status=2):
+    async def createPayload(self, subject, description, tags=[], priority=1, status=2):
         
-    #     payload = {
-    #         "requester_id": self.id,
-    #         "description":  description, 
-    #         "subject": subject,
-    #         "email": self.email,
-    #         "phone": self.phone, 
-    #         "priority": priority, 
-    #         "status": status, 
-    #         "source": 2,
-    #         "tags": tags,
-    #         "custom_fields": {"ansprechperson_vorname_name": self.ansprechperson}
-    #     }
+        payload = {
+            'requester_id': self.id,
+            'description':  description, 
+            'subject': subject,
+            'email': self.email,
+            'phone': self.phone, 
+            'priority': priority, 
+            'status': status, 
+            'source': 2,
+            'tags': tags,
+            'custom_fields': {'ansprechperson_vorname_name': self.ansprechperson}
+        }
 
-    #     return(payload)
+        return(payload)
 
-    # def checkTicket(self, payload):
-    #     print("Check if Ticket exists: " + payload["subject"])
-    #     tickets = self.getTickets()
-    #     for i in tickets[0]:
-    #         if i["subject"] == payload["subject"]:
-    #             return(i)
-    #     return
+    async def checkTicket(self, payload):
+        tickets = self.getAll()
+        for i in tickets:
+            if i['subject'] == payload['subject']:
+                return(i)
+        return
 
-    # def createTicket(self, payload):       
-    #     print("Creating Ticket: " + payload["subject"])
-    #     s = requests.Session()
-    #     basic = HTTPBasicAuth(self.api_key, ":X")
-    #     r = s.post(self.portal + "/api/v2/tickets", auth = basic, json = payload)
-    #     w = vars(r)["_content"]
-    #     encoding = "utf-8"
-    #     p = str(w, encoding)
-    #     res = json.loads(p)
-    #     goal = res["ticket"]
-    #     return(goal)
+    async def postTicket(self, payload, id = ''):
 
-    # def updateTicket(self, id, payload):       
-    #     print("Updating Ticket: " + payload["subject"])
-    #     s = requests.Session()
-    #     basic = HTTPBasicAuth(self.api_key, ":X")
-    #     r = s.put(self.portal + "/api/v2/tickets/" + str(id), auth = basic, json = payload)
-    #     w = vars(r)["_content"]
-    #     encoding = "utf-8"
-    #     p = str(w, encoding)
-    #     res = json.loads(p)
-    #     goal = res["ticket"]
-    #     return(goal)
+        async with aiohttp.ClientSession(auth = aiohttp.BasicAuth(self.api_key, 'X')) as session:
+            async with session.post(self.url + self.endpoint + id, json = payload) as resp:
+                assert resp.status == 200
+                goal = await resp.json()
+                result = goal['ticket']
+                return(result)

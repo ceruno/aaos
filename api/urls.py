@@ -18,8 +18,9 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 from rest_framework import routers
 from config import views
-from exports.sentinelone import views as s1_views
-from exports.freshservice import views as fresh_views
+from analytics.sentinelone import views as s1_analytics
+from exports.sentinelone import views as s1_exports
+from exports.freshservice import views as fresh_exports
 
 
 router_main = routers.DefaultRouter()
@@ -36,10 +37,12 @@ urlpatterns = [
     path('users/', include(router_main.urls)),
     path('config/', include(router_config.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('exports/s1', s1_views.main),
-    path('exports/s1-debug', s1_views.debug),
-    path('exports/fresh', fresh_views.main),
-    path('exports/fresh-debug', fresh_views.debug),
+    path('analytics/usage', s1_analytics.usage),
+    path('analytics/usage-debug', s1_analytics.usage_debug),
+    path('exports/s1', s1_exports.main),
+    path('exports/s1-debug', s1_exports.debug),
+    path('exports/fresh', fresh_exports.main),
+    path('exports/fresh-debug', fresh_exports.debug),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

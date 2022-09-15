@@ -13,17 +13,26 @@ f = Fernet(key)
 def export(args):
 
     fresh_config = FreshServiceModel.objects.all().values()
- 
     results = []
+    groups = []
+
     for i in list(fresh_config):
 
         api_key = (f.decrypt(i['api_key'])).decode()
-        fresh_session = FreshServiceAPI(i, api_key, args['item'])
-        
-        task = asyncio.run(fresh_session.getAll())
-        results.extend(task)
 
-    return(write(args, results))
+        fresh_session = FreshServiceAPI(i, api_key, 'groups')
+        task1 = asyncio.run(fresh_session.getAll())
+        groups.extend(task1)
+
+        if args['item'] != 'groups':
+            fresh_session = FreshServiceAPI(i, api_key, args['item'])
+            task2 = asyncio.run(fresh_session.getAll(groups))
+            results.extend(task2)
+
+    if args['item'] == 'groups':
+            return(write(args, groups))
+    else:
+        return(write(args, results))
 
 def write(args, results):
 
