@@ -6,7 +6,7 @@ from .tasks import export, exportBySite
 bySite = ['exclusions', 'groups','installed-applications']
 response_get = {'message': 'use POST request', 
                 'parameters': ['item:mandatory', 'index:mandatory', 'pipeline:optional', 'limit:optional', 'timedelta:optional'],
-                'example': {'item': 'agents', 'index': 'c1-s1-agents', 'pipeline': 'c1-geo-ip-agent'}}  
+                'example': {'item': 'agents', 'index': 'c1-s1-agents', 'pipeline': 'c1-geo-ip-agent'}}
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])

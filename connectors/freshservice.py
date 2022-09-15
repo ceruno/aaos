@@ -95,10 +95,19 @@ class FreshServiceAPI:
                 return(i)
         return
 
-    async def postTicket(self, payload, id = ''):
+    async def postTicket(self, payload):
 
         async with aiohttp.ClientSession(auth = aiohttp.BasicAuth(self.api_key, 'X')) as session:
-            async with session.post(self.url + self.endpoint + id, json = payload) as resp:
+            async with session.post(self.url + self.endpoint, json = payload) as resp:
+                assert resp.status == 200
+                goal = await resp.json()
+                result = goal['ticket']
+                return(result)
+
+    async def putTicket(self, payload, id):
+
+        async with aiohttp.ClientSession(auth = aiohttp.BasicAuth(self.api_key, 'X')) as session:
+            async with session.put(self.url + self.endpoint + '/' + str(id), json = payload) as resp:
                 assert resp.status == 200
                 goal = await resp.json()
                 result = goal['ticket']
