@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import imp
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
@@ -21,6 +22,7 @@ from config import views
 from analytics.sentinelone import views as s1_analytics
 from exports.sentinelone import views as s1_exports
 from exports.freshservice import views as fresh_exports
+from exports.bexio import views as bexio_exports
 from licensing.sentinelone import views as s1_licensing
 
 
@@ -32,6 +34,8 @@ router_config = routers.DefaultRouter()
 router_config.register(r's1', views.SentinelOneViewSet)
 router_config.register(r'elastic', views.ElasticViewSet)
 router_config.register(r'fresh', views.FreshServiceViewSet)
+router_config.register(r'bexio', views.BexioViewSet)
+router_config.register(r'sharepoint', views.SharePointViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,6 +48,8 @@ urlpatterns = [
     path('exports/s1-debug', s1_exports.debug),
     path('exports/fresh', fresh_exports.main),
     path('exports/fresh-debug', fresh_exports.debug),
+    path('exports/bexio', bexio_exports.main),
+    path('exports/bexio-debug', bexio_exports.debug),
     path('licensing/s1', s1_licensing.main),
     path('licensing/s1-debug', s1_licensing.debug),
 ]

@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
-from config.serializers import UserSerializer, GroupSerializer, SentinelOneSerializer, ElasticSerializer, FreshServiceSerializer
-from config.models import SentinelOneModel, ElasticModel, FreshServiceModel
+from config.serializers import UserSerializer, GroupSerializer, SentinelOneSerializer, ElasticSerializer, FreshServiceSerializer, BexioSerializer, SharePointSerializer
+from config.models import SentinelOneModel, ElasticModel, FreshServiceModel, BexioModel, SharePointModel
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -44,4 +44,20 @@ class FreshServiceViewSet(viewsets.ModelViewSet):
     """
     queryset = FreshServiceModel.objects.all()
     serializer_class = FreshServiceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class BexioViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SentinelOne entries to be viewed or edited.
+    """
+    queryset = BexioModel.objects.all()
+    serializer_class = BexioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class SharePointViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SentinelOne entries to be viewed or edited.
+    """
+    queryset = SharePointModel.objects.all()
+    serializer_class = SharePointSerializer
     permission_classes = [permissions.IsAuthenticated]

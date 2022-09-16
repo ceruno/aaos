@@ -1,7 +1,7 @@
 from encodings import utf_8
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from config.models import SentinelOneModel, ElasticModel, FreshServiceModel
+from config.models import SentinelOneModel, ElasticModel, FreshServiceModel, BexioModel, SharePointModel
 from cryptography.fernet import Fernet
 import os
 
@@ -50,3 +50,21 @@ class FreshServiceSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data):
         validated_data['api_key'] = (f.encrypt(bytes(validated_data['api_key'], 'utf-8'))).decode()
         return FreshServiceModel.objects.create(**validated_data)
+
+class BexioSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = BexioModel
+        fields = ['url', 'bexio_url', 'api_key']
+
+    def create(self, validated_data):
+        validated_data['api_key'] = (f.encrypt(bytes(validated_data['api_key'], 'utf-8'))).decode()
+        return BexioModel.objects.create(**validated_data)
+
+class SharePointSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = SharePointModel
+        fields = ['url', 'sharepoint_url', 'sharepoint_site', 'user', 'password']
+
+    def create(self, validated_data):
+        validated_data['password'] = (f.encrypt(bytes(validated_data['password'], 'utf-8'))).decode()
+        return SharePointModel.objects.create(**validated_data)
