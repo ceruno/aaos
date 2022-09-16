@@ -18,6 +18,8 @@ class SentinelOneAPI:
             self.params.update({'includeChildren': 'true', 'includeParents': 'true'})
         if self.item == 'installed-applications':
             self.params.update({'riskLevelsNin': 'none'})
+        if self.item == 'activities':
+            self.params.update({'sortOrder': 'desc'})
 
     async def get(self, session):
 
@@ -33,24 +35,25 @@ class SentinelOneAPI:
 
             for i in result:
                 values = {
-                    "@timestamp": self.tstamp,
-                    "managementConsoleUrl": self.url
+                    '@timestamp': self.tstamp,
+                    'managementConsoleUrl': self.url
                 }
                 i.update(values)
 
                 if self.item == 'activities':
-                    if "current" in i["data"]:
-                        i["data"]["current"] = str(i["data"]["current"])
-                    if "newValue" in i["data"]:
-                        i["data"]["newValue"] = str(i["data"]["newValue"])
-                    if "previous" in i["data"]:
-                        i["data"]["previous"] = str(i["data"]["previous"])
+                    i['@timestamp'] = datetime.strptime(i['updatedAt'], '%Y-%m-%dT%H:%M:%S.%fZ')
+                    if 'current' in i['data']:
+                        i['data']['current'] = str(i['data']['current'])
+                    if 'newValue' in i['data']:
+                        i['data']['newValue'] = str(i['data']['newValue'])
+                    if 'previous' in i['data']:
+                        i['data']['previous'] = str(i['data']['previous'])
                 
             return(result, cursor)
 
     async def getAll(self):
 
-        self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tstamp = datetime.now(tz=pytz.timezone('Europe/Zurich'))
         results = []
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
@@ -66,10 +69,10 @@ class SentinelOneAPI:
 
     async def getByDelta(self, delta):
 
-        self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tstamp = datetime.now(tz=pytz.timezone('Europe/Zurich'))
         time = self.tstamp - timedelta(minutes=int(delta))
-        time_utc = time.astimezone(pytz.timezone("UTC"))
-        time_str = time_utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        time_utc = time.astimezone(pytz.timezone('UTC'))
+        time_str = time_utc.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         self.params.update({'createdAt__gte': time_str})
         results = []
 
@@ -86,7 +89,7 @@ class SentinelOneAPI:
 
     async def get1000(self):
 
-        self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tstamp = datetime.now(tz=pytz.timezone('Europe/Zurich'))
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
             result = await self.get(session)
@@ -95,7 +98,7 @@ class SentinelOneAPI:
 
     async def getBySite(self, site):
 
-        self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tstamp = datetime.now(tz=pytz.timezone('Europe/Zurich'))
         self.params.update({'siteIds': site['id']})
         results = []
         
@@ -119,4 +122,25 @@ class SentinelOneAPI:
                     }
                     i.update(values)
             
+        return(results)
+
+    async def getByActivityId(self, ids):
+
+        self.tstamp = datetime.now(tz=pytz.timezone('Europe/Zurich'))
+        self.params.update({'activityTypes': ids})
+        time = self.tstamp - timedelta(days=7)
+        time_utc = time.astimezone(pytz.timezone('UTC'))
+        time_str = time_utc.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        self.params.update({'createdAt__gte': time_str})
+        results = []
+
+        async with aiohttp.ClientSession(headers=self.headers) as session:
+            result = await self.get(session)
+            results.extend(result[0])
+
+            while result[1] != None:
+                self.params.update({'cursor': result[1]})
+                result = await self.get(session)
+                results.extend(result[0])
+        
         return(results)

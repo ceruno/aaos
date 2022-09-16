@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'analytics.sentinelone',
     'exports.sentinelone',
     'exports.freshservice',
+    'licensing.sentinelone',
 ]
 
 MIDDLEWARE = [

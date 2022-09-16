@@ -12,8 +12,8 @@ response_get = {'message': 'use POST request',
 def main(request):
     if request.method == 'POST':
         task = export.delay(request.data)
-        result = task.id
-        response_post = {'message': 'task added', 'task_id': result, 'post': request.data}
+        result = 'task_id ' + task.id
+        response_post = {'message': 'task added', 'result': result, 'post': request.data}
         return Response(response_post)
     return Response(response_get)
 
