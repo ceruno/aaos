@@ -26,10 +26,10 @@ def usage(args):
     for config in list(s1_config):
 
         token = (f.decrypt(config['token'])).decode()
-        s1_session = SentinelOneAPI(config['console_url'], token, 'accounts')
+        s1_session = SentinelOneAPI(config['sentinelone_url'], token, 'accounts')
         accounts_single = asyncio.run(s1_session.getAll())
         accounts.extend(accounts_single)
-        s1_session = SentinelOneAPI(config['console_url'], token, 'sites')
+        s1_session = SentinelOneAPI(config['sentinelone_url'], token, 'sites')
         sites_single = asyncio.run(s1_session.getAll())
         sites.extend(sites_single)
 
@@ -120,10 +120,10 @@ def expiration(args):
     for config in list(s1_config):
 
         token = (f.decrypt(config['token'])).decode()
-        s1_session = SentinelOneAPI(config['console_url'], token, 'accounts')
+        s1_session = SentinelOneAPI(config['sentinelone_url'], token, 'accounts')
         accounts_single = asyncio.run(s1_session.getAll())
         accounts.extend(accounts_single)
-        s1_session = SentinelOneAPI(config['console_url'], token, 'sites')
+        s1_session = SentinelOneAPI(config['sentinelone_url'], token, 'sites')
         sites_single = asyncio.run(s1_session.getAll())
         sites.extend(sites_single)
 

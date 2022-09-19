@@ -24,7 +24,7 @@ def update(args):
     for config in list(s1_config):
 
         token = (f.decrypt(config['token'])).decode()
-        s1_session = SentinelOneAPI(config['console_url'], token, 'activities')
+        s1_session = SentinelOneAPI(config['sentinelone_url'], token, 'activities')
         activities_single = asyncio.run(s1_session.getByActivityId('5,43'))
         activities.extend(activities_single)
 

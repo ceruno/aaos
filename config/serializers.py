@@ -21,7 +21,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class SentinelOneSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SentinelOneModel
-        fields = ['url', 'console_url', 'token']
+        fields = ['url', 'sentinelone_url', 'token']
 
     def create(self, validated_data):
         validated_data['token'] = (f.encrypt(bytes(validated_data['token'], 'utf-8'))).decode()
@@ -29,14 +29,14 @@ class SentinelOneSerializer(serializers.HyperlinkedModelSerializer):
 
     # def to_representation(self, instance):
     #     return {
-    #         'console_url': instance.console_url,
+    #         'sentinelone_url': instance.sentinelone_url,
     #         'token': f.decrypt(instance.token)
     #     }
 
 class ElasticSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ElasticModel
-        fields = ['url', 'elastic_url', 'user', 'password']
+        fields = ['url', 'elastic_url', 'tls_fingerprint', 'user', 'password']
 
     def create(self, validated_data):
         validated_data['password'] = (f.encrypt(bytes(validated_data['password'], 'utf-8'))).decode()
@@ -45,7 +45,7 @@ class ElasticSerializer(serializers.HyperlinkedModelSerializer):
 class FreshServiceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FreshServiceModel
-        fields = ['url', 'service_url', 'api_key', 'group_id', 'requester_id', 'requester_email', 'requester_phone', 'ansprechperson']
+        fields = ['url', 'fresh_url', 'api_key', 'group_id', 'requester_id', 'requester_email', 'requester_phone', 'ansprechperson']
 
     def create(self, validated_data):
         validated_data['api_key'] = (f.encrypt(bytes(validated_data['api_key'], 'utf-8'))).decode()

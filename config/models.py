@@ -1,16 +1,17 @@
 from django.db import models
 
 class SentinelOneModel(models.Model):
-    console_url = models.URLField()
+    sentinelone_url = models.URLField()
     token = models.TextField()
 
 class ElasticModel(models.Model):
     elastic_url = models.URLField()
+    tls_fingerprint = models.CharField(max_length=200)
     user = models.CharField(max_length=200)
     password = models.TextField()
 
 class FreshServiceModel(models.Model):
-    service_url = models.URLField()
+    fresh_url = models.URLField()
     api_key = models.TextField()
     group_id = models.BigIntegerField()
     requester_id = models.BigIntegerField()

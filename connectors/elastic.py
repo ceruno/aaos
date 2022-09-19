@@ -3,15 +3,20 @@ import traceback
 
 class ElasticAPI:
 
-    def __init__(self, url, user, password, timestamp, index, pipeline = None):
+    def __init__(self, config, password, timestamp, index, pipeline = None):
 
-        self.url = url
-        self.user = user
+        self.url = config['elastic_url']
+        self.user = config['user']
         self.password = password
         self.timestamp = timestamp
         self.index = index
         self.pipeline = pipeline
-        self.session = Elasticsearch(self.url, basic_auth=(self.user, self.password))
+        if 'tls_fingerprint' in config:
+            self.fingerprint = config['tls_fingerprint']
+            self.session = Elasticsearch(self.url, ssl_assert_fingerprint=(self.fingerprint), basic_auth=(self.user, self.password))
+        else:
+            self.session = Elasticsearch(self.url, basic_auth=(self.user, self.password))
+            
 
     def write(self, results):
         

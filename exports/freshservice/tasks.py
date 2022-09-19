@@ -16,16 +16,16 @@ def export(args):
     results = []
     groups = []
 
-    for i in list(fresh_config):
+    for config in list(fresh_config):
 
-        api_key = (f.decrypt(i['api_key'])).decode()
+        api_key = (f.decrypt(config['api_key'])).decode()
 
-        fresh_session = FreshServiceAPI(i, api_key, 'groups')
+        fresh_session = FreshServiceAPI(config, api_key, 'groups')
         task1 = asyncio.run(fresh_session.getAll())
         groups.extend(task1)
 
         if args['item'] != 'groups':
-            fresh_session = FreshServiceAPI(i, api_key, args['item'])
+            fresh_session = FreshServiceAPI(config, api_key, args['item'])
             task2 = asyncio.run(fresh_session.getAll(groups))
             results.extend(task2)
 
@@ -45,9 +45,9 @@ def write(args, results):
     if args['item'] == 'activities':
         timestamp = False
     
-    for i in list(elastic_config):
-        password = (f.decrypt(i['password'])).decode()
-        elastic_session = ElasticAPI(i['elastic_url'], i['user'], password, timestamp, args['index'], args['pipeline'])
+    for config in list(elastic_config):
+        password = (f.decrypt(config['password'])).decode()
+        elastic_session = ElasticAPI(config, password, timestamp, args['index'], args['pipeline'])
         result = elastic_session.write(results)
 
     return(result)

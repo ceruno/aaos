@@ -15,10 +15,10 @@ def export(args):
     s1_config = SentinelOneModel.objects.all().values()
  
     results = []
-    for i in list(s1_config):
+    for config in list(s1_config):
 
-        token = (f.decrypt(i['token'])).decode()
-        s1_session = SentinelOneAPI(i['console_url'], token, args['item'])
+        token = (f.decrypt(config['token'])).decode()
+        s1_session = SentinelOneAPI(config['sentinelone_url'], token, args['item'])
         
         if 'timedelta' in args.keys():
             task = asyncio.run(s1_session.getByDelta(args['timedelta']))
@@ -37,16 +37,16 @@ def exportBySite(args):
     
     sites = []
     results = []
-    for i in list(s1_config):
+    for config in list(s1_config):
 
-        token = (f.decrypt(i['token'])).decode()
-        s1_session = SentinelOneAPI(i['console_url'], token, 'sites')
+        token = (f.decrypt(config['token'])).decode()
+        s1_session = SentinelOneAPI(config['sentinelone_url'], token, 'sites')
         
         task1 = asyncio.run(s1_session.getAll())
         sites.extend(task1)
 
         for site in sites:
-            s1_session = SentinelOneAPI(i['console_url'], token, args['item'])
+            s1_session = SentinelOneAPI(config['sentinelone_url'], token, args['item'])
             task2 = asyncio.run(s1_session.getBySite(site))
             results.extend(task2)
 
@@ -63,9 +63,9 @@ def write(args, results):
     if args['item'] == 'activities':
         timestamp = False
     
-    for i in list(elastic_config):
-        password = (f.decrypt(i['password'])).decode()
-        elastic_session = ElasticAPI(i['elastic_url'], i['user'], password, timestamp, args['index'], args['pipeline'])
+    for config in list(elastic_config):
+        password = (f.decrypt(config['password'])).decode()
+        elastic_session = ElasticAPI(config, password, timestamp, args['index'], args['pipeline'])
         result = elastic_session.write(results)
 
     return(result)
