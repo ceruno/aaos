@@ -281,7 +281,7 @@ def update(args):
 
             password = (f.decrypt(sp_config['password'])).decode()
             sp_session = SharePointAPI(sp_config['sharepoint_url'],sp_config['sharepoint_site'],sp_config['user'],password)
-            sp_session.authenticate()
+            sp_site = sp_session.authenticate()
 
             open_quotes = 'Offene_Angebote'
             win_quotes = 'WINs'
@@ -302,8 +302,8 @@ def update(args):
                 BEXIO_LIST = übergebene Bexio Liste
                 current_bexio = erstellt eine kurze Liste mit dem Feld (field_2) aller aktueller Bexio Einträge
                 '''
-                sp_session.get_sp_list(list)
-                current_sharepoint_list = sp_session.download_list_items(fields=[field_1,field_2])
+                sp_list =  sp_session.get_sp_list(sp_site, list)
+                current_sharepoint_list = sp_session.download_list_items(sp_list, fields=[field_1,field_2])
 
                 sharepoint_dic = {}
                 for s in current_sharepoint_list:
@@ -323,7 +323,7 @@ def update(args):
                         del_list.append(v)
 
                 print('Zu löschende Einträge auf Sharepoint: ', del_list)
-                sp_session.detele_list_items(del_list)
+                sp_session.detele_list_items(sp_list, del_list)
 
                 # Neue Bexio Entries auf Sharepoint erstellen oder existierende aktualisieren
                 new_bexio = []              # Liste mit neuen Einträgen im Bexio (nur mit field_2 drinnen)
@@ -342,9 +342,9 @@ def update(args):
 
                 print('Neue Bexio Elemente: ', new_bexio)
                 # Neue Angebote hochladen auf sharepoint
-                sp_session.create_list_items(new_bexio_entries)
+                sp_session.create_list_items(sp_list, new_bexio_entries)
                 # Um existierende Einträge zu aktualisieren benötigen wir die dazugehörigen Sharepoint IDs !!
-                sp_session.update_list_items(existing_bexio_entries) 
+                sp_session.update_list_items(sp_list, existing_bexio_entries) 
 
             print('Kunden Liste')
             update_sharepoint_lists(kunden, bexio_customer_list, 'Nr', 'ID')
