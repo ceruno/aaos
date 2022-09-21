@@ -4,8 +4,11 @@ celery
 cryptography
 django
 django-celery-beat
+django-cors-headers
 djangorestframework
+djangorestframework-simplejwt
 elasticsearch
+elastic-apm
 flower
 gunicorn
 psycopg2-binary

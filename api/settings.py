@@ -39,17 +39,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'django_celery_beat',
+    'corsheaders',
+    'elasticapm.contrib.django',
     'config',
     'analytics.sentinelone',
     'exports.sentinelone',
     'exports.freshservice',
+    'exports.bexio',
     'licensing.sentinelone',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -143,7 +148,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 # Celery Configuration Options
@@ -152,3 +162,46 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
+
+# CORS Settings
+CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'elasticapm': {
+            'level': 'WARNING',
+            'class': 'elasticapm.contrib.django.handlers.LoggingHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'aaos': {
+            'level': 'WARNING',
+            'handlers': ['elasticapm'],
+            'propagate': False,
+        },
+        # Log errors from the Elastic APM module to the console (recommended)
+        'elasticapm.errors': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
+}

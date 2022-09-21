@@ -18,7 +18,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().order_by('id')
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -26,7 +26,7 @@ class SentinelOneViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SentinelOne entries to be viewed or edited.
     """
-    queryset = SentinelOneModel.objects.all()
+    queryset = SentinelOneModel.objects.all().order_by('id')
     serializer_class = SentinelOneSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -34,7 +34,7 @@ class ElasticViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SentinelOne entries to be viewed or edited.
     """
-    queryset = ElasticModel.objects.all()
+    queryset = ElasticModel.objects.all().order_by('id')
     serializer_class = ElasticSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -42,7 +42,7 @@ class FreshServiceViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SentinelOne entries to be viewed or edited.
     """
-    queryset = FreshServiceModel.objects.all()
+    queryset = FreshServiceModel.objects.all().order_by('id')
     serializer_class = FreshServiceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -50,7 +50,7 @@ class BexioViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SentinelOne entries to be viewed or edited.
     """
-    queryset = BexioModel.objects.all()
+    queryset = BexioModel.objects.all().order_by('id')
     serializer_class = BexioSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -58,6 +58,6 @@ class SharePointViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SentinelOne entries to be viewed or edited.
     """
-    queryset = SharePointModel.objects.all()
+    queryset = SharePointModel.objects.all().order_by('id')
     serializer_class = SharePointSerializer
     permission_classes = [permissions.IsAuthenticated]

@@ -6,6 +6,13 @@ from celery import shared_task
 from cryptography.fernet import Fernet
 import os
 
+# Celery logging version
+# from celery.utils.log import get_task_logger
+# logger = get_task_logger(__name__)
+
+import logging
+logger = logging.getLogger('aaos')
+
 key = bytes(os.environ.get("ENCRYPTION_KEY"), 'utf-8')
 f = Fernet(key)
 
@@ -13,7 +20,8 @@ f = Fernet(key)
 def export(args):
 
     s1_config = SentinelOneModel.objects.all().values()
- 
+    logger.info('getting S1 config')
+
     results = []
     for config in list(s1_config):
 
