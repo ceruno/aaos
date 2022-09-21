@@ -16,7 +16,7 @@ services:
   db:
     image: postgres:14-alpine
     volumes:
-      - pg_data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data/
     env_file:
       - ./.env/.prod
   broker:
@@ -55,4 +55,4 @@ services:
       - broker
 
 volumes:
-  pg_data:
+  db_data:

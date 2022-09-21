@@ -18,7 +18,7 @@ services:
   db:
     image: postgres:14-alpine
     volumes:
-      - pg_data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data/
     ports:
       - 5432:5432
     env_file:
@@ -59,4 +59,4 @@ services:
       - broker
 
 volumes:
-  pg_data:
+  db_data:
