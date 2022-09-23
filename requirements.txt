@@ -4,6 +4,7 @@ celery
 cryptography
 django
 django-celery-beat
+django-celery-results
 django-cors-headers
 djangorestframework
 djangorestframework-simplejwt
