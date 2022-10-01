@@ -8,22 +8,22 @@ class FreshServiceAPI:
 
     def __init__(self, config, api_key, item):
         
-        self.url = config["service_url"]
+        self.url = config['fresh_url']
         self.api_key = api_key
         self.item = item
         self.endpoint = '/api/v2/' + item
         self.params = {'per_page': '100'}
-        self.gid = config["group_id"]
-        self.id = config["requester_id"] 
-        self.email = config["requester_email"]
-        self.phone = config["requester_phone"]
-        self.ansprechperson = config["ansprechperson"]
+        self.gid = config['group_id']
+        self.id = config['requester_id'] 
+        self.email = config['requester_email']
+        self.phone = config['requester_phone']
+        self.ansprechperson = config['ansprechperson']
         if item == 'tickets':
             self.params.update({'include': 'department,requester,stats,tags'})
 
     async def get(self, session):
 
-        self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tstamp = datetime.now(tz=pytz.timezone('Europe/Zurich'))
 
         async with session.get(self.url + self.endpoint, params=self.params) as resp:
 
@@ -34,7 +34,7 @@ class FreshServiceAPI:
 
             for i in result:
                 values = {
-                    "@timestamp": self.tstamp,
+                    '@timestamp': self.tstamp,
                 }
                 i.update(values)
 
@@ -42,7 +42,7 @@ class FreshServiceAPI:
 
     async def getAll(self, groups = None):
 
-        self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tstamp = datetime.now(tz=pytz.timezone('Europe/Zurich'))
         results = []
         page = 1
 
