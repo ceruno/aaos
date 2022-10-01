@@ -1,9 +1,10 @@
+from operator import index
 from elasticsearch import Elasticsearch, helpers
 import traceback
 
 class ElasticAPI:
 
-    def __init__(self, config, password, timestamp, index, pipeline = None):
+    def __init__(self, config, password, timestamp, index, pipeline):
 
         self.url = config['elastic_url']
         self.user = config['user']
@@ -11,7 +12,7 @@ class ElasticAPI:
         self.timestamp = timestamp
         self.index = index
         self.pipeline = pipeline
-        if 'tls_fingerprint' in config:
+        if config['tls_fingerprint'] != '':
             self.fingerprint = config['tls_fingerprint']
             self.session = Elasticsearch(self.url, ssl_assert_fingerprint=(self.fingerprint), basic_auth=(self.user, self.password))
         else:
@@ -30,7 +31,7 @@ class ElasticAPI:
             for node in results
         ]
 
-        if self.pipeline is not None:
+        if self.pipeline != '':
             for item in data:
                 values = {
                     'pipeline' : self.pipeline
@@ -50,4 +51,4 @@ class ElasticAPI:
                 break
             except Exception:
                 return(traceback.format_exc())
-        return('done')
+        return({'result': 'success', 'url': self.url, 'index': self.index})

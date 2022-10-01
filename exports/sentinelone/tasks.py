@@ -28,9 +28,9 @@ def export(args):
         token = (f.decrypt(config['token'])).decode()
         s1_session = SentinelOneAPI(config['sentinelone_url'], token, args['item'])
         
-        if 'timedelta' in args.keys():
+        if args['timedelta'] != '':
             task = asyncio.run(s1_session.getByDelta(args['timedelta']))
-        elif ('limit' in args.keys()) and (args['limit'] == 'true'):
+        elif args['limit'] == 'true':
             task = asyncio.run(s1_session.get1000())
         else:
             task = asyncio.run(s1_session.getAll())
@@ -64,16 +64,16 @@ def write(args, results):
 
     elastic_config = ElasticModel.objects.all().values()
 
-    if not 'pipeline' in args.keys():
-        args['pipeline'] = None
-    
+    result = []
     timestamp = True
+    
     if args['item'] == 'activities':
         timestamp = False
     
     for config in list(elastic_config):
         password = (f.decrypt(config['password'])).decode()
         elastic_session = ElasticAPI(config, password, timestamp, args['index'], args['pipeline'])
-        result = elastic_session.write(results)
+        task = elastic_session.write(results)
+        result.append(task)
 
     return(result)

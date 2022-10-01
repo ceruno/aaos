@@ -42,18 +42,21 @@ router_config.register(r'fresh', views.FreshServiceViewSet)
 router_config.register(r'bexio', views.BexioViewSet)
 router_config.register(r'sharepoint', views.SharePointViewSet)
 
+router_export = routers.DefaultRouter()
+router_export.register(r's1', s1_exports.ExportViewSet, 's1')
+router_export.register(r's1-debug', s1_exports.ExportViewSetDebug, 's1-debug')
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include(router_main.urls)),
     path('config/', include(router_config.urls)),
+    path('export/', include(router_export.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('analytics/s1', s1_analytics.main),
     path('analytics/s1-debug', s1_analytics.debug),
-    path('exports/s1', s1_exports.main),
-    path('exports/s1-debug', s1_exports.debug),
     path('exports/fresh', fresh_exports.main),
     path('exports/fresh-debug', fresh_exports.debug),
     path('exports/bexio', bexio_exports.main),
