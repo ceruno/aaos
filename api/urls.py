@@ -1,5 +1,6 @@
+from django.conf import settings
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls.static import static
 from django.urls import path, include
 from rest_framework import routers
 from config import views
@@ -14,6 +15,14 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+# router_test = routers.DefaultRouter()
+# router_test.register(r'users/users', views.UserViewSet)
+# router_test.register(r'users/groups', views.GroupViewSet)
+# router_test.register(r'config/s1', views.SentinelOneViewSet)
+# router_test.register(r'config/elastic', views.ElasticViewSet)
+# router_test.register(r'config/fresh', views.FreshServiceViewSet)
+# router_test.register(r'config/bexio', views.BexioViewSet)
+# router_test.register(r'config/sharepoint', views.SharePointViewSet)
 
 router_main = routers.DefaultRouter()
 router_main.register(r'users', views.UserViewSet)
@@ -44,15 +53,17 @@ router_licensing.register(r's1-debug', s1_licensing.ExportViewSetDebug, 'licensi
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include(router_main.urls)),
-    path('config/', include(router_config.urls)),
-    path('analytics/', include(router_analytics.urls)),
-    path('exports/', include(router_exports.urls)),
-    path('licensing/', include(router_licensing.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # path('api/', include(router_test.urls)),
+    path('api/users/', include(router_main.urls)),
+    path('api/config/', include(router_config.urls)),
+    path('api/analytics/', include(router_analytics.urls)),
+    path('api/exports/', include(router_exports.urls)),
+    path('api/licensing/', include(router_licensing.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
 
-urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
