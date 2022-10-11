@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
-from config.serializers import UserSerializer, GroupSerializer, SentinelOneSerializer, ElasticSerializer, FreshServiceSerializer, BexioSerializer, SharePointSerializer
+from config.serializers import UserSerializer, GroupSerializer, SentinelOneSerializer, ElasticSerializer, FreshServiceSerializer, BexioSerializer, SharePointSerializer, IntervalScheduleSerializer, CrontabScheduleSerializer, PeriodicTaskSerializer
 from config.models import SentinelOneModel, ElasticModel, FreshServiceModel, BexioModel, SharePointModel
+from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -60,4 +61,28 @@ class SharePointViewSet(viewsets.ModelViewSet):
     """
     queryset = SharePointModel.objects.all().order_by('id')
     serializer_class = SharePointSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CrontabScheduleViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SentinelOne entries to be viewed or edited.
+    """
+    queryset = CrontabSchedule.objects.all().order_by('id')
+    serializer_class = CrontabScheduleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class IntervalScheduleViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SentinelOne entries to be viewed or edited.
+    """
+    queryset = IntervalSchedule.objects.all().order_by('id')
+    serializer_class = IntervalScheduleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PeriodicTaskViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SentinelOne entries to be viewed or edited.
+    """
+    queryset = PeriodicTask.objects.all().order_by('id')
+    serializer_class = PeriodicTaskSerializer
     permission_classes = [permissions.IsAuthenticated]

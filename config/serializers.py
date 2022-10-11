@@ -2,6 +2,7 @@ from encodings import utf_8
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from config.models import SentinelOneModel, ElasticModel, FreshServiceModel, BexioModel, SharePointModel
+from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 from cryptography.fernet import Fernet
 import os
 
@@ -68,3 +69,18 @@ class SharePointSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data):
         validated_data['password'] = (f.encrypt(bytes(validated_data['password'], 'utf-8'))).decode()
         return SharePointModel.objects.create(**validated_data)
+
+class CrontabScheduleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CrontabSchedule
+        fields = '__all__'
+
+class IntervalScheduleSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = IntervalSchedule
+        fields = '__all__'
+
+class PeriodicTaskSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = PeriodicTask
+        fields = '__all__'
