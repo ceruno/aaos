@@ -2,6 +2,6 @@ from django.apps import AppConfig
 
 
 class BexioConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'exports.bexio'
-    label = 'exports_bexio'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "exports.bexio"
+    label = "exports_bexio"

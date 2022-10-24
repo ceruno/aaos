@@ -11,54 +11,58 @@ import os
 # logger = get_task_logger(__name__)
 
 import logging
-logger = logging.getLogger('aaos')
 
-key = bytes(os.environ.get("ENCRYPTION_KEY"), 'utf-8')
+logger = logging.getLogger("aaos")
+
+key = bytes(os.environ.get("ENCRYPTION_KEY"), "utf-8")
 f = Fernet(key)
+
 
 @shared_task
 def export(args):
 
     s1_config = SentinelOneModel.objects.all().values()
-    logger.info('getting S1 config')
+    logger.info("getting S1 config")
 
     results = []
     for config in list(s1_config):
 
-        token = (f.decrypt(config['token'])).decode()
-        s1_session = SentinelOneAPI(config['sentinelone_url'], token, args['item'])
-        
-        if args['timedelta'] != '':
-            task = asyncio.run(s1_session.getByDelta(args['timedelta']))
-        elif args['limit'] == 'true':
+        token = (f.decrypt(config["token"])).decode()
+        s1_session = SentinelOneAPI(config["sentinelone_url"], token, args["item"])
+
+        if args["timedelta"] != "":
+            task = asyncio.run(s1_session.getByDelta(args["timedelta"]))
+        elif args["limit"] == "true":
             task = asyncio.run(s1_session.get1000())
         else:
             task = asyncio.run(s1_session.getAll())
         results.extend(task)
 
-    return(write(args, results))
+    return write(args, results)
+
 
 @shared_task
 def exportBySite(args):
 
     s1_config = SentinelOneModel.objects.all().values()
-    
+
     sites = []
     results = []
     for config in list(s1_config):
 
-        token = (f.decrypt(config['token'])).decode()
-        s1_session = SentinelOneAPI(config['sentinelone_url'], token, 'sites')
-        
+        token = (f.decrypt(config["token"])).decode()
+        s1_session = SentinelOneAPI(config["sentinelone_url"], token, "sites")
+
         task1 = asyncio.run(s1_session.getAll())
         sites.extend(task1)
 
         for site in sites:
-            s1_session = SentinelOneAPI(config['sentinelone_url'], token, args['item'])
+            s1_session = SentinelOneAPI(config["sentinelone_url"], token, args["item"])
             task2 = asyncio.run(s1_session.getBySite(site))
             results.extend(task2)
 
-    return(write(args, results))
+    return write(args, results)
+
 
 def write(args, results):
 
@@ -66,14 +70,16 @@ def write(args, results):
 
     result = []
     timestamp = True
-    
-    if args['item'] == 'activities':
+
+    if args["item"] == "activities":
         timestamp = False
-    
+
     for config in list(elastic_config):
-        password = (f.decrypt(config['password'])).decode()
-        elastic_session = ElasticAPI(config, password, timestamp, args['index'], args['pipeline'])
+        password = (f.decrypt(config["password"])).decode()
+        elastic_session = ElasticAPI(
+            config, password, timestamp, args["index"], args["pipeline"]
+        )
         task = elastic_session.write(results)
         result.append(task)
 
-    return(result)
+    return result
