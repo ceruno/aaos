@@ -54,23 +54,23 @@ jobs:
 
         - name: 'Deploy to AKS'
         - uses: Azure/k8s-deploy@v4.5
-              with:
-                manifests: |
-                  kubernetes/aaos-dev-configmap.yaml
-                  kubernetes/db-data-persistentvolumeclaim.yaml
-                  kubernetes/db-deployment.yaml
-                  kubernetes/broker-deployment.yaml
-                  kubernetes/api-deployment.yaml
-                  kubernetes/api-serivce.yaml
-                  kubernetes/worker-deployment.yaml
-                  kubernetes/scheduler-deployment.yaml
-                  kubernetes/monitor-deployment.yaml
-                  kubernetes/monitor-serivce.yaml
-                  kubernetes/web-deployment.yaml
-                  kubernetes/web-serivce.yaml
-                namespace: aaos
-                images: |
-                  ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
-                  ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
-                imagepullsecrets: |
-                  'cer1dev-secret'
+          with:
+            manifests: |
+              kubernetes/aaos-dev-configmap.yaml
+              kubernetes/db-data-persistentvolumeclaim.yaml
+              kubernetes/db-deployment.yaml
+              kubernetes/broker-deployment.yaml
+              kubernetes/api-deployment.yaml
+              kubernetes/api-serivce.yaml
+              kubernetes/worker-deployment.yaml
+              kubernetes/scheduler-deployment.yaml
+              kubernetes/monitor-deployment.yaml
+              kubernetes/monitor-serivce.yaml
+              kubernetes/web-deployment.yaml
+              kubernetes/web-serivce.yaml
+            namespace: aaos
+            images: |
+              ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
+              ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
+            imagepullsecrets: |
+              'cer1dev-secret'
