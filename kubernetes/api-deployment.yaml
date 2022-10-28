@@ -120,7 +120,7 @@ spec:
                 configMapKeyRef:
                   key: SQL_USER
                   name: aaos-dev
-          image: aaos
+          image: cer1dev.azurecr.io/aaos:dev
           name: api
           ports:
             - containerPort: 8000
