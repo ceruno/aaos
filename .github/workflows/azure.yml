@@ -25,6 +25,7 @@ jobs:
             password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
         - run: |
             docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
+            docker run -rm aaos:dev python manage.py collectstatic -v ./static:/static
             docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
             docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev -f ./nginx/Dockerfile
             docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
