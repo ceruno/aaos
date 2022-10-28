@@ -1,0 +1,76 @@
+name: azure
+on:
+  push:
+    branches:
+      - 'dev'
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+        # checkout the repo
+        - name: 'Checkout GitHub Action'
+          uses: actions/checkout@main
+          
+        - name: 'Login via Azure CLI'
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+        - name: 'Build and push images'
+          uses: azure/docker-login@v1
+          with:
+            login-server: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+            username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+            password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+        - run: |
+            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
+            docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
+            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev -f ./nginx/Dockerfile
+            docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
+
+        - name: 'Set AKS context'
+          uses: azure/aks-set-context@v3
+          with:
+            resource-group: 'k8s-dev'
+            cluster-name: 'k8s-dev'
+
+        - name: 'Set imagePullSecret'
+          uses: azure/k8s-create-secret@v4
+          with:
+            namespace: 'aaos'
+            secret-name: 'cer1dev-secret'
+            container-registry-url: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+            container-registry-username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+            container-registry-password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+
+        - name: 'Set secrets'
+          uses: azure/k8s-create-secret@v2
+          with:
+            namespace: 'aaos'
+            secret-type: 'generic'
+            secret-name: aaos-dev
+            data: ${{ secrets.AAOS_DEV_SECRET }}
+
+        - name: 'Deploy to AKS'
+        - uses: Azure/k8s-deploy@v4.5
+              with:
+                manifests: |
+                  kubernetes/aaos-dev-configmap.yaml
+                  kubernetes/db-data-persistentvolumeclaim.yaml
+                  kubernetes/db-deployment.yaml
+                  kubernetes/broker-deployment.yaml
+                  kubernetes/api-deployment.yaml
+                  kubernetes/api-serivce.yaml
+                  kubernetes/worker-deployment.yaml
+                  kubernetes/scheduler-deployment.yaml
+                  kubernetes/monitor-deployment.yaml
+                  kubernetes/monitor-serivce.yaml
+                  kubernetes/web-deployment.yaml
+                  kubernetes/web-serivce.yaml
+                namespace: aaos
+                images: |
+                  ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
+                  ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
+                imagepullsecrets: |
+                  'cer1dev-secret'
