@@ -53,7 +53,7 @@ jobs:
             data: ${{ secrets.AAOS_DEV_SECRET }}
 
         - name: 'Deploy to AKS'
-        - uses: Azure/k8s-deploy@v4.5
+          uses: Azure/k8s-deploy@v4.5
           with:
             manifests: |
               kubernetes/aaos-dev-configmap.yaml
