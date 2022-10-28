@@ -61,13 +61,13 @@ jobs:
               kubernetes/db-deployment.yaml
               kubernetes/broker-deployment.yaml
               kubernetes/api-deployment.yaml
-              kubernetes/api-serivce.yaml
+              kubernetes/api-service.yaml
               kubernetes/worker-deployment.yaml
               kubernetes/scheduler-deployment.yaml
               kubernetes/monitor-deployment.yaml
-              kubernetes/monitor-serivce.yaml
+              kubernetes/monitor-service.yaml
               kubernetes/web-deployment.yaml
-              kubernetes/web-serivce.yaml
+              kubernetes/web-service.yaml
             namespace: default
             images: |
               ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
