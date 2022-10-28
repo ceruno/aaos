@@ -38,16 +38,16 @@ jobs:
         - name: 'Set imagePullSecret'
           uses: azure/k8s-create-secret@v4
           with:
-            namespace: 'aaos'
+            namespace: 'default'
             secret-name: 'cer1dev-secret'
             container-registry-url: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
             container-registry-username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
             container-registry-password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
         - name: 'Set secrets'
-          uses: azure/k8s-create-secret@v2
+          uses: azure/k8s-create-secret@v4
           with:
-            namespace: 'aaos'
+            namespace: 'default'
             secret-type: 'generic'
             secret-name: aaos-dev
             data: ${{ secrets.AAOS_DEV_SECRET }}
@@ -68,7 +68,7 @@ jobs:
               kubernetes/monitor-serivce.yaml
               kubernetes/web-deployment.yaml
               kubernetes/web-serivce.yaml
-            namespace: aaos
+            namespace: default
             images: |
               ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
               ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
