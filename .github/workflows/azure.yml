@@ -33,7 +33,7 @@ jobs:
           uses: azure/aks-set-context@v3
           with:
             resource-group: 'k8s-dev'
-            cluster-name: 'k8s-dev'
+            cluster-name: 'cer1dev'
 
         - name: 'Set imagePullSecret'
           uses: azure/k8s-create-secret@v4
