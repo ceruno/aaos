@@ -126,10 +126,10 @@ spec:
           resources: {}
           volumeMounts:
             - mountPath: /var/lib/postgresql/data/
-              name: db-data
+              name: pv-db-data
       restartPolicy: Always
       volumes:
-        - name: db-data
+        - name: pv-db-data
           persistentVolumeClaim:
             claimName: pvc-db-data
 status: {}
