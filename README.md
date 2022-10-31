@@ -3,7 +3,7 @@
 Analysis, Automation and Orchestration Service
 dri @ 2022
 
-.env Example
+.env Example for Docker Compose
 
 ```
 DEBUG=1
