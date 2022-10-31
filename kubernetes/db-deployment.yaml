@@ -131,5 +131,5 @@ spec:
       volumes:
         - name: db-data
           persistentVolumeClaim:
-            claimName: pv-db-data
+            claimName: pvc-db-data
 status: {}
