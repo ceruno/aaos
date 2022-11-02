@@ -93,7 +93,7 @@ class FreshServiceAPI:
     async def checkTicket(self, payload):
         tickets = self.getAll()
         for i in tickets:
-            if i["subject"] == payload["subject"]:
+            if (i["subject"] == payload["subject"]) and ((i["status"] == 2) or (i["status"] == 3)):
                 return i
         return
 
