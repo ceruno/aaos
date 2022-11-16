@@ -4,9 +4,9 @@ metadata:
   name: pvc-db-data
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
+  storageClassName: azurefile-csi
+  volumeName: pv-db-data
   resources:
     requests:
-      storage: 20Gi
-  volumeName: pv-db-data
-  storageClassName: managed-csi
+      storage: 5Gi
