@@ -57,9 +57,6 @@ jobs:
           with: 
             manifests: |
               kubernetes/aaos-dev-configmap.yaml
-              # kubernetes/db-data-persistentvolume.yaml
-              # kubernetes/db-data-persistentvolumeclaim.yaml
-              # kubernetes/db-deployment.yaml
               kubernetes/broker-deployment.yaml
               kubernetes/api-deployment.yaml
               kubernetes/api-service.yaml
