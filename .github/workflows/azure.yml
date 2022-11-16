@@ -55,11 +55,11 @@ jobs:
         - name: 'Deploy to AKS'
           uses: Azure/k8s-deploy@v4.5
           with:
-            manifests: |
+            manifests:
               kubernetes/aaos-dev-configmap.yaml
-              kubernetes/db-data-persistentvolume.yaml
-              kubernetes/db-data-persistentvolumeclaim.yaml
-              kubernetes/db-deployment.yaml
+              # kubernetes/db-data-persistentvolume.yaml
+              # kubernetes/db-data-persistentvolumeclaim.yaml
+              # kubernetes/db-deployment.yaml
               kubernetes/broker-deployment.yaml
               kubernetes/api-deployment.yaml
               kubernetes/api-service.yaml
@@ -70,8 +70,8 @@ jobs:
               kubernetes/web-deployment.yaml
               kubernetes/web-service.yaml
             namespace: default
-            images: |
+            images:
               ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
               ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
-            imagepullsecrets: |
+            imagepullsecrets:
               'cer1dev-secret'

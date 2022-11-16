@@ -29,5 +29,7 @@ spec:
           ports:
             - containerPort: 80
           resources: {}
+      imagePullSecrets: 
+        - name: cer1dev-secret 
       restartPolicy: Always
 status: {}

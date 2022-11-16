@@ -11,7 +11,7 @@ data:
   POSTGRES_USER: aaos
   SQL_DATABASE: aaos
   SQL_ENGINE: django.db.backends.postgresql
-  SQL_HOST: db
+  SQL_HOST: cer1-pgdev.postgres.database.azure.com
   SQL_PORT: "5432"
   SQL_USER: aaos
 kind: ConfigMap

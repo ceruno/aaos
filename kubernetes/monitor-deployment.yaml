@@ -131,5 +131,7 @@ spec:
           ports:
             - containerPort: 5555
           resources: {}
+      imagePullSecrets: 
+        - name: cer1dev-secret 
       restartPolicy: Always
 status: {}

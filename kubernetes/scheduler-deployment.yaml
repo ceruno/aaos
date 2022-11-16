@@ -131,5 +131,7 @@ spec:
           image: cer1dev.azurecr.io/aaos:dev
           name: scheduler
           resources: {}
+      imagePullSecrets: 
+        - name: cer1dev-secret 
       restartPolicy: Always
 status: {}
