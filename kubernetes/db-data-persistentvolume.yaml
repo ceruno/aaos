@@ -12,6 +12,6 @@ spec:
   csi:
     driver: disk.csi.azure.com
     readOnly: false
-    volumeHandle: /subscriptions/578fad85-d738-4960-8538-564443d7a298/resourceGroups/MC_k8s-dev_cer1dev_westeurope/providers/Microsoft.Compute/disks/aaosdev
+    volumeHandle: /subscriptions/578fad85-d738-4960-8538-564443d7a298/resourcegroups/MC_k8s-dev_cer1dev_westeurope/providers/Microsoft.Compute/disks/aaosdev
     volumeAttributes:
       fsType: ext4
