@@ -121,6 +121,7 @@ spec:
                   key: SQL_USER
                   name: aaos-dev
           image: cer1dev.azurecr.io/aaos:dev
+          imagePullSecrets: cer1dev-secret
           name: api
           ports:
             - containerPort: 8000
