@@ -1,12 +1,12 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: pvc-db-data
 spec:
   accessModes:
     - ReadWriteMany
+  storageClassName: azurefile-csi
+  volumeName: pv-db-data
   resources:
     requests:
-      storage: 10Gi
-  volumeName: pv-db-data
-  storageClassName: azureblob-nfs-premium
+      storage: 5Gi

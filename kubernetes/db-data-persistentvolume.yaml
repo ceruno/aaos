@@ -4,19 +4,27 @@ metadata:
   name: pv-db-data
 spec:
   capacity:
-    storage: 10Gi
+    storage: 5Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain  # If set as "Delete" container would be removed after pvc deletion
-  storageClassName: azureblob-nfs-premium
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: azurefile-csi
   csi:
-    driver: blob.csi.azure.com
+    driver: file.csi.azure.com
     readOnly: false
-    # make sure this volumeid is unique in the cluster
-    # `#` is not allowed in self defined volumeHandle
-    volumeHandle: unique-volumeid
+    volumeHandle: 38c20e8e-5680-4043-ab6a-8d4672a054cb
     volumeAttributes:
-      resourceGroup: k8s-dev
-      storageAccount: aaosdev
-      containerName: aaos-dev-db
-      protocol: nfs
+      # resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as agent node
+      shareName: aaos-dev-db
+    nodeStageSecretRef:
+      name: aaosdev-storage-secret
+      namespace: default
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=0
+    - gid=0
+    - mfsymlinks
+    - cache=strict
+    - nosharesock
+    - nobrl
