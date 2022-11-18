@@ -9,7 +9,7 @@ metadata:
     io.kompose.service: web
   name: web
 spec:
-  type: LoadBalancer
+  # type: LoadBalancer
   ports:
     - name: "80"
       port: 80
