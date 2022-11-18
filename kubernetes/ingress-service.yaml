@@ -12,7 +12,7 @@ spec:
   tls:
   - hosts:
     - aaos.ceruno.cloud
-    secretName: letsencrypt-prod
+    secretName: aaos-certificate
   rules:
     - host: aaos.ceruno.cloud
       http:
