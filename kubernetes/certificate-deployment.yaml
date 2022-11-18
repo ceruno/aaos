@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: aaos-staging
+  namespace: default
+spec:
+  secretName: aaos-staging-certificate
+  issuerRef:
+    name: letsencrypt-staging
+  dnsNames:
+  - aaos.ceruno.cloud

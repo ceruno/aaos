@@ -66,6 +66,9 @@ jobs:
               kubernetes/monitor-service.yaml
               kubernetes/web-deployment.yaml
               kubernetes/web-service.yaml
+              kubernetes/issuer-deployment.yaml
+              kubernetes/certificate-deployment.yaml
+              kubernetes/ingress-service.yaml
             namespace: default
             images: |
               ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev

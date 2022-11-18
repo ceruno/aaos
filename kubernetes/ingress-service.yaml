@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingressrule
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/issuer: "letsencrypt-staging"
+spec:
+  tls:
+  - hosts:
+    - aaos.ceruno.cloud
+    secretName: aaos-staging-certificate
+  rules:
+    - host: aaos.ceruno.cloud
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: api
+              servicePort: 8000
