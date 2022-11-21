@@ -160,10 +160,12 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 # CORS Settings
 CORS_ALLOWED_ORIGINS = [
     "http://pds.mgmt.local", 
-    "https://aaos.ceruno.cloud"]
+    "https://aaos.ceruno.cloud"
+]
 
 # CSRF Settings
 CSRF_TRUSTED_ORIGINS = [
+    "http://pds.mgmt.local", 
     "https://aaos.ceruno.cloud"
 ]
 
