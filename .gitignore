@@ -1,3 +1,4 @@
 .env
 .key
+nginx
 __pycache__
