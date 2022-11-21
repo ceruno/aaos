@@ -3,7 +3,7 @@ data:
   CELERY_BACKEND: redis://broker:6379/0
   CELERY_BROKER: redis://broker:6379/0
   DJANGO_ALLOWED_HOSTS: '*'
-  DEBUG: "True"
+  DEBUG: 1
   ELASTIC_APM_DEBUG: "True"
   ELASTIC_APM_LOG_LEVEL: debug
   ELASTIC_APM_SERVICE_NAME: aaos
