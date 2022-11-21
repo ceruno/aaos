@@ -13,6 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
     cert-manager.io/issuer: "letsencrypt-prod"
 spec:
+  host: aaos.ceruno.cloud
   tls:
   - hosts:
     - aaos.ceruno.cloud
