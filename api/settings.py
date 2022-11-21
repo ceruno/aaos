@@ -165,8 +165,8 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 
 # CSRF Settings
 CSRF_TRUSTED_ORIGINS = [
-    "http://*", 
-    "https://*"
+    "http://pds.mgmt.local", 
+    "https://aaos.ceruno.cloud"
 ]
 
 # Logging
@@ -209,5 +209,5 @@ LOGGING = {
     },
 }
 
-X_FRAME_OPTIONS = "SAMEORIGIN"
+# X_FRAME_OPTIONS = "SAMEORIGIN"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
