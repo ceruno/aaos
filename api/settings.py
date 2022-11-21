@@ -47,7 +47,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     # "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -164,10 +164,10 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 # ]
 
 # CSRF Settings
-CSRF_TRUSTED_ORIGINS = [
-    "http://pds.mgmt.local", 
-    "https://aaos.ceruno.cloud"
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://pds.mgmt.local", 
+#     "https://aaos.ceruno.cloud"
+# ]
 
 # Logging
 LOGGING = {
