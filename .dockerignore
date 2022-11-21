@@ -14,9 +14,7 @@
 **/*.dbmdl
 **/*.jfm
 **/kubernetes
-**/media
-**/nginx
-**/static
+**/web
 **/bin
 **/charts
 **/docker-compose*
