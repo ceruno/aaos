@@ -46,6 +46,11 @@ spec:
                 configMapKeyRef:
                   key: DJANGO_ALLOWED_HOSTS
                   name: aaos-dev
+            - name: DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  key: DEBUG
+                  name: aaos-dev
             - name: ELASTIC_APM_DEBUG
               valueFrom:
                 configMapKeyRef:

@@ -13,6 +13,10 @@
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm
+**/kubernetes
+**/media
+**/nginx
+**/static
 **/bin
 **/charts
 **/docker-compose*

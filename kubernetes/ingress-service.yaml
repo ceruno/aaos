@@ -38,10 +38,3 @@ spec:
                 name: web
                 port: 
                   number: 80
-          - path: /monitor
-            pathType: Prefix
-            backend:
-              service:
-                name: monitor
-                port: 
-                  number: 5555

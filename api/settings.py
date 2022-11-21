@@ -158,7 +158,7 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 
 # CORS Settings
-CORS_ALLOWED_ORIGINS = ["http://localhost:4200", "http://pds.mgmt.local"]
+CORS_ALLOWED_ORIGINS = ["http://localhost:4200", "http://pds.mgmt.local", "https://aaos.ceruno.cloud"]
 
 # Logging
 LOGGING = {
