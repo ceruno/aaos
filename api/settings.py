@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "django_celery_beat",
     "django_celery_results",
-    "corsheaders",
+    # "corsheaders",
     "elasticapm.contrib.django",
     "config",
     "analytics.sentinelone",
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
+    # "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -158,10 +158,10 @@ CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 
 # CORS Settings
-CORS_ALLOWED_ORIGINS = [
-    "http://pds.mgmt.local", 
-    "https://aaos.ceruno.cloud"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://pds.mgmt.local", 
+#     "https://aaos.ceruno.cloud"
+# ]
 
 # CSRF Settings
 CSRF_TRUSTED_ORIGINS = [
