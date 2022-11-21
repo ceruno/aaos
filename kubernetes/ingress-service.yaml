@@ -21,7 +21,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: web
+                name: api
                 port: 
                   number: 8000
           - path: /static
