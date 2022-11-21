@@ -55,8 +55,8 @@ services:
       - broker
   web:
     build: 
-      context: .
-      dockerfile: ./nginx/Dockerfile
+      context: ./web
+      dockerfile: ./Dockerfile
     ports:
       - 80:80
     depends_on:
