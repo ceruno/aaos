@@ -26,7 +26,8 @@ jobs:
         - run: |
             docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
             docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
-            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev -f ./nginx/nginx.Dockerfile
+            cd ./nginx
+            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
             docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
 
         - name: 'Set AKS context'

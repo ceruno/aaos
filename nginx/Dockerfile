@@ -1,10 +1,10 @@
 FROM nginx:alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
-COPY ./nginx/nginx.conf /etc/nginx/conf.d
+COPY ./nginx.conf /etc/nginx/conf.d
 
 WORKDIR /static
-COPY ./static /static
+COPY ../static /static
 
 WORKDIR /media
-COPY ./media /media
+COPY ../media /media
