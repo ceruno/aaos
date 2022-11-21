@@ -15,7 +15,7 @@ metadata:
 spec:
   tls:
   - hosts:
-    - aaos.ceruno.cloud
+    - https://aaos.ceruno.cloud
     secretName: aaos-certificate
   rules:
     - host: aaos.ceruno.cloud
