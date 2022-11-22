@@ -164,10 +164,10 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 # ]
 
 # CSRF Settings
-CSRF_TRUSTED_ORIGINS = [
-    "http://aaos.ceruno.cloud", 
-    "https://aaos.ceruno.cloud"
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     "http://aaos.ceruno.cloud", 
+#     "https://aaos.ceruno.cloud"
+# ]
 
 # Logging
 LOGGING = {
