@@ -30,14 +30,14 @@ spec:
                 port: 
                   number: 8000
           - path: /static
-            pathType: Exact
+            pathType: Prefix
             backend:
               service:
                 name: web
                 port: 
                   number: 80
           - path: /media
-            pathType: Exact
+            pathType: Prefix
             backend:
               service:
                 name: web
