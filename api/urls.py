@@ -15,6 +15,10 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+admin.site.site_header = 'AAOS'
+admin.site.site_title = 'AAOS'
+admin.site.index_title = 'Welcome'
+
 # router_test = routers.DefaultRouter()
 # router_test.register(r'users/users', views.UserViewSet)
 # router_test.register(r'users/groups', views.GroupViewSet)

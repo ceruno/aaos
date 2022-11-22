@@ -12,6 +12,8 @@ services:
       - 5678:5678
     env_file:
       - ./.env/.dev
+    volumes:
+      - ./web/static/:/app/web/static/
     depends_on:
       - broker
       - db
