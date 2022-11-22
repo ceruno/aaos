@@ -25,11 +25,11 @@ jobs:
             password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
         - run: |
             docker image prune -a -f
-            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
-            docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
+            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:${{ github.sha }}
+            docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:${{ github.sha }}
             cd ./web
-            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
-            docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
+            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:${{ github.sha }}
+            docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:${{ github.sha }}
 
         - name: 'Set AKS context'
           uses: azure/aks-set-context@v3
@@ -73,7 +73,7 @@ jobs:
               kubernetes/ingress-service.yaml
             namespace: default
             images: |
-              ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
-              ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:dev
+              ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:${{ github.sha }}
+              ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:${{ github.sha }}
             imagepullsecrets: |
               'cer1dev-secret'

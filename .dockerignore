@@ -15,6 +15,7 @@
 **/*.jfm
 **/kubernetes
 **/web
+**/nginx
 **/bin
 **/charts
 **/docker-compose*
