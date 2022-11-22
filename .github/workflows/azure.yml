@@ -24,6 +24,7 @@ jobs:
             username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
             password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
         - run: |
+            docker image prune -a -f
             docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
             docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:dev
             cd ./web
