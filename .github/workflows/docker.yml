@@ -26,7 +26,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_ORGANZATION }}/aaos:latest
+          tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/aaos:latest
       -
         name: Build and push aaos-dev
         uses: docker/build-push-action@v3
