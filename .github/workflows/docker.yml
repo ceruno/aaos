@@ -32,6 +32,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./web
-          file: ./Dockerfile
+          file: ./web/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_ORGANIZATION }}/aaos-web:dev
