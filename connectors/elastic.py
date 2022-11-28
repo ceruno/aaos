@@ -1,4 +1,3 @@
-from operator import index
 from elasticsearch import Elasticsearch, helpers
 import traceback
 
@@ -6,23 +5,32 @@ import traceback
 class ElasticAPI:
     def __init__(self, config, password, timestamp, index, pipeline):
 
-        self.url = config["elastic_url"]
         self.user = config["user"]
         self.password = password
         self.timestamp = timestamp
         self.index = index
         self.pipeline = pipeline
-        if config["tls_fingerprint"] != "":
-            self.fingerprint = config["tls_fingerprint"]
+
+        if config["elastic_cloud_id"] != "":
+            self.cloud_id = config["elastic_cloud_id"]
             self.session = Elasticsearch(
-                self.url,
-                ssl_assert_fingerprint=(self.fingerprint),
+                cloud_id=self.cloud_id,
                 basic_auth=(self.user, self.password),
             )
         else:
-            self.session = Elasticsearch(
-                self.url, basic_auth=(self.user, self.password)
-            )
+            if config["elastic_url"] != "":
+                self.url = config["elastic_url"]
+                if config["tls_fingerprint"] != "":
+                    self.fingerprint = config["tls_fingerprint"]
+                    self.session = Elasticsearch(
+                    self.url,
+                    ssl_assert_fingerprint=(self.fingerprint),
+                    basic_auth=(self.user, self.password),
+                )
+                else:
+                    self.session = Elasticsearch(
+                        self.url, basic_auth=(self.user, self.password)
+                    )
 
     def write(self, results):
 
@@ -54,4 +62,4 @@ class ElasticAPI:
                 break
             except Exception:
                 return traceback.format_exc()
-        return {"result": "success", "url": self.url, "index": self.index}
+        return {"result": "success", "index": self.index}

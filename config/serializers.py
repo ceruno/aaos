@@ -49,7 +49,7 @@ class SentinelOneSerializer(serializers.HyperlinkedModelSerializer):
 class ElasticSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ElasticModel
-        fields = ["url", "elastic_url", "tls_fingerprint", "user", "password"]
+        fields = ["url", "elastic_cloud_id", "elastic_url", "tls_fingerprint", "user", "password"]
 
     def create(self, validated_data):
         validated_data["password"] = (

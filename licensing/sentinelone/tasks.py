@@ -78,7 +78,7 @@ def usage(args):
                 existing_ticket = checkTicket(tickets, payload)
                 if existing_ticket:
                     overprovisioned = re.findall(
-                        "Overprovisioned:\ (\d*)", existing_ticket["description"]
+                        r"Overprovisioned:\ (\d*)", existing_ticket["description"]
                     )[0]
                     if int(overprovisioned) != usageLicensesDifference:
                         asyncio.run(
@@ -123,7 +123,7 @@ def usage(args):
                 existing_ticket = checkTicket(tickets, payload)
                 if existing_ticket:
                     overprovisioned = re.findall(
-                        "Overprovisioned:\ (\d*)", existing_ticket["description"]
+                        r"Overprovisioned:\ (\d*)", existing_ticket["description"]
                     )[0]
                     if int(overprovisioned) != usageLicensesDifference:
                         asyncio.run(
@@ -192,7 +192,7 @@ def expiration(args):
                 existing_ticket = checkTicket(tickets, payload)
                 if existing_ticket:
                     days = re.findall(
-                        "Expires in:\ (\d*)\ days", existing_ticket["description"]
+                        r"Expires in:\ (\d*)\ days", existing_ticket["description"]
                     )[0]
                     if int(days) != delta.days:
                         asyncio.run(
@@ -231,7 +231,7 @@ def expiration(args):
                 existing_ticket = checkTicket(tickets, payload)
                 if existing_ticket:
                     days = re.findall(
-                        "Expires in:\ (\d*)\ days", existing_ticket["description"]
+                        r"Expires in:\ (\d*)\ days", existing_ticket["description"]
                     )[0]
                     if int(days) != delta.days:
                         asyncio.run(

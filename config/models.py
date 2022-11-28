@@ -7,7 +7,8 @@ class SentinelOneModel(models.Model):
 
 
 class ElasticModel(models.Model):
-    elastic_url = models.URLField()
+    elastic_cloud_id = models.CharField(max_length=200, blank=True)
+    elastic_url = models.URLField(blank=True)
     tls_fingerprint = models.CharField(max_length=200, blank=True)
     user = models.CharField(max_length=200)
     password = models.TextField()

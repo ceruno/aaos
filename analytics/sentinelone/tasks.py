@@ -45,7 +45,7 @@ def update(args):
         sent = list(
             filter(
                 lambda i: re.search(
-                    "^Software\ update\ availability\ notification\ was\ sent\ to\ (.*)\ by\ (.*)\.",
+                    r"^Software\ update\ availability\ notification\ was\ sent\ to\ (.*)\ by\ (.*)\.",
                     i["primaryDescription"],
                 ),
                 activities,
@@ -54,7 +54,7 @@ def update(args):
         successful = list(
             filter(
                 lambda i: re.search(
-                    "^Agent\ (.*)\ was\ successfully\ updated\ to\ version\ (.*)\.",
+                    r"^Agent\ (.*)\ was\ successfully\ updated\ to\ version\ (.*)\.",
                     i["primaryDescription"],
                 ),
                 activities,
@@ -64,7 +64,7 @@ def update(args):
         for sent_single in sent:
             if sent_single["@timestamp"] <= (datetime.now() - timedelta(minutes=60)):
                 agent_sent = re.findall(
-                    "^Software\ update\ availability\ notification\ was\ sent\ to\ (.*)\ by\ .*\.",
+                    r"^Software\ update\ availability\ notification\ was\ sent\ to\ (.*)\ by\ .*\.",
                     sent_single["primaryDescription"],
                 )
                 match = False
@@ -88,7 +88,7 @@ def update(args):
                 )
                 for successful_single in successful:
                     agent_successful = re.findall(
-                        "^Agent\ (.*)\ was\ successfully\ updated\ to\ version\ .*\.",
+                        r"^Agent\ (.*)\ was\ successfully\ updated\ to\ version\ .*\.",
                         successful_single["primaryDescription"],
                     )
                     if agent_sent == agent_successful:
@@ -102,7 +102,7 @@ def update(args):
                     existing_ticket = checkTicket(tickets, payload)
                     if existing_ticket:
                         initiated = re.findall(
-                            "Update\ initiated:\ (.*)\ UTC",
+                            r"Update\ initiated:\ (.*)\ UTC",
                             existing_ticket["description"],
                         )[0]
                         if initiated != sent_single["@timestamp"].strftime(
