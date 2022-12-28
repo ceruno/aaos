@@ -159,13 +159,13 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
 
 # CORS Settings
 # CORS_ALLOWED_ORIGINS = [
-#     "http://pds.mgmt.local", 
+#     "http://pds.mgmt.local",
 #     "https://aaos.ceruno.cloud"
 # ]
 
 # CSRF Settings
 # CSRF_TRUSTED_ORIGINS = [
-#     "http://aaos.ceruno.cloud", 
+#     "http://aaos.ceruno.cloud",
 #     "https://aaos.ceruno.cloud"
 # ]
 
@@ -209,5 +209,5 @@ LOGGING = {
     },
 }
 
-# X_FRAME_OPTIONS = "SAMEORIGIN"
+# X_FRAME_OPTIONS = "SAMEORIGIN"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

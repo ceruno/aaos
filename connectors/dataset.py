@@ -1,9 +1,4 @@
-import aiohttp
-from datetime import datetime, timedelta
-import json
-import pytz
 import requests
-import re
 import time
 import uuid
 
@@ -23,27 +18,29 @@ class DataSetAPI:
 
         for result in results:
             result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
-            event =       {
+            event = {
                 # "thread": "1",
                 "ts": time_nanosec,
                 # "sev": 3,
-                "attrs": result
+                "attrs": result,
             }
             events.append(event)
 
         headers = {
             "Content-type": "application/json",
-            "Authorization": "Bearer " + self.token
+            "Authorization": "Bearer " + self.token,
         }
 
         payload = {
             "session": str(self.uuid),
             "sessionInfo": {
-            "item": self.item,
-            "managementConsoleUrl": results[0]["managementConsoleUrl"]
+                "item": self.item,
+                "managementConsoleUrl": results[0]["managementConsoleUrl"],
             },
-            "events": events
+            "events": events,
         }
 
-        answer = requests.post(self.url + "/api/addEvents", json=payload, headers=headers)
+        answer = requests.post(
+            self.url + "/api/addEvents", json=payload, headers=headers
+        )
         return {"result": "success"}

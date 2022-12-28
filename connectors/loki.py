@@ -1,7 +1,4 @@
-import aiohttp
-from datetime import datetime, timedelta
 import json
-import pytz
 import requests
 import re
 import time
@@ -10,13 +7,19 @@ import time
 class LokiAPI:
     def __init__(self, config, token, item):
 
-        self.url = re.findall(
-                        r"https://(.*)", config["loki_url"]
-                    )[0]
+        self.url = re.findall(r"https://(.*)", config["loki_url"])[0]
         self.user = config["user"]
         self.token = token
         self.item = item
-        self.connectionstring = "https://" + self.user + ":" + self.token + "@" + self.url + "/loki/api/v1/push"
+        self.connectionstring = (
+            "https://"
+            + self.user
+            + ":"
+            + self.token
+            + "@"
+            + self.url
+            + "/loki/api/v1/push"
+        )
 
     def write(self, results):
 
@@ -27,22 +30,20 @@ class LokiAPI:
         for result in results:
             result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
             values.append([str(time_nanosec), json.dumps(result)])
-        
-        headers = {
-            "Content-type": "application/json"
-        }
+
+        headers = {"Content-type": "application/json"}
 
         payload = {
             "streams": [
                 {
-                "stream": {
-                    "item": self.item,
-                    "managementConsoleUrl": results[0]["managementConsoleUrl"],
-                },
-                "values": values
+                    "stream": {
+                        "item": self.item,
+                        "managementConsoleUrl": results[0]["managementConsoleUrl"],
+                    },
+                    "values": values,
                 }
             ]
-            }
+        }
 
         answer = requests.post(self.connectionstring, json=payload, headers=headers)
         return {"result": "success"}

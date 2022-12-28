@@ -23,10 +23,10 @@ class ElasticAPI:
                 if config["tls_fingerprint"] != "":
                     self.fingerprint = config["tls_fingerprint"]
                     self.session = Elasticsearch(
-                    self.url,
-                    ssl_assert_fingerprint=(self.fingerprint),
-                    basic_auth=(self.user, self.password),
-                )
+                        self.url,
+                        ssl_assert_fingerprint=(self.fingerprint),
+                        basic_auth=(self.user, self.password),
+                    )
                 else:
                     self.session = Elasticsearch(
                         self.url, basic_auth=(self.user, self.password)
