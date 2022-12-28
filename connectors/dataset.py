@@ -17,7 +17,7 @@ class DataSetAPI:
         time_nanosec = time.time_ns()
 
         for result in results:
-            result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
+            # result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
             event = {
                 "ts": result["ts"],
                 "attrs": result,
