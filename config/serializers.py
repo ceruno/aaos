@@ -7,6 +7,8 @@ from config.models import (
     FreshServiceModel,
     BexioModel,
     SharePointModel,
+    LokiModel,
+    DataSetModel,
 )
 from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 from cryptography.fernet import Fernet
@@ -101,6 +103,28 @@ class SharePointSerializer(serializers.HyperlinkedModelSerializer):
             f.encrypt(bytes(validated_data["password"], "utf-8"))
         ).decode()
         return SharePointModel.objects.create(**validated_data)
+
+class LokiSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = LokiModel
+        fields = ["url", "loki_url", "user", "token"]
+
+    def create(self, validated_data):
+        validated_data["token"] = (
+            f.encrypt(bytes(validated_data["token"], "utf-8"))
+        ).decode()
+        return LokiModel.objects.create(**validated_data)
+
+class DataSetSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = DataSetModel
+        fields = ["url", "dataset_url", "token"]
+
+    def create(self, validated_data):
+        validated_data["token"] = (
+            f.encrypt(bytes(validated_data["token"], "utf-8"))
+        ).decode()
+        return DataSetModel.objects.create(**validated_data)
 
 
 class CrontabScheduleSerializer(serializers.HyperlinkedModelSerializer):

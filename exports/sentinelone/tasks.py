@@ -1,7 +1,9 @@
 import asyncio
 from connectors.sentinelone import SentinelOneAPI
 from connectors.elastic import ElasticAPI
-from config.models import SentinelOneModel, ElasticModel
+from connectors.loki import LokiAPI
+from connectors.dataset import DataSetAPI
+from config.models import SentinelOneModel, ElasticModel, LokiModel, DataSetModel
 from celery import shared_task
 from cryptography.fernet import Fernet
 import os
@@ -80,6 +82,38 @@ def write(args, results):
             config, password, timestamp, args["index"], args["pipeline"]
         )
         task = elastic_session.write(results)
+        result.append(task)
+
+    return result
+
+def writeLoki(args, results):
+
+    loki_config = LokiModel.objects.all().values()
+
+    result = []
+
+    for config in list(loki_config):
+        token = (f.decrypt(config["token"])).decode()
+        loki_session = LokiAPI(
+            config, token, args["item"]
+        )
+        task = loki_session.write(results)
+        result.append(task)
+
+    return result
+
+def writeDataSet(args, results):
+
+    dataset_config = DataSetModel.objects.all().values()
+
+    result = []
+
+    for config in list(dataset_config):
+        token = (f.decrypt(config["token"])).decode()
+        dataset_session = DataSetAPI(
+            config, token, args["item"]
+        )
+        task = dataset_session.write(results)
         result.append(task)
 
     return result

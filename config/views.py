@@ -9,6 +9,8 @@ from config.serializers import (
     FreshServiceSerializer,
     BexioSerializer,
     SharePointSerializer,
+    LokiSerializer,
+    DataSetSerializer,
     IntervalScheduleSerializer,
     CrontabScheduleSerializer,
     PeriodicTaskSerializer,
@@ -19,6 +21,8 @@ from config.models import (
     FreshServiceModel,
     BexioModel,
     SharePointModel,
+    LokiModel,
+    DataSetModel,
 )
 from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 
@@ -55,7 +59,7 @@ class SentinelOneViewSet(viewsets.ModelViewSet):
 
 class ElasticViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SentinelOne entries to be viewed or edited.
+    API endpoint that allows Elastic entries to be viewed or edited.
     """
 
     queryset = ElasticModel.objects.all().order_by("id")
@@ -65,7 +69,7 @@ class ElasticViewSet(viewsets.ModelViewSet):
 
 class FreshServiceViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SentinelOne entries to be viewed or edited.
+    API endpoint that allows FreshService entries to be viewed or edited.
     """
 
     queryset = FreshServiceModel.objects.all().order_by("id")
@@ -75,7 +79,7 @@ class FreshServiceViewSet(viewsets.ModelViewSet):
 
 class BexioViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SentinelOne entries to be viewed or edited.
+    API endpoint that allows Bexio entries to be viewed or edited.
     """
 
     queryset = BexioModel.objects.all().order_by("id")
@@ -85,11 +89,31 @@ class BexioViewSet(viewsets.ModelViewSet):
 
 class SharePointViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SentinelOne entries to be viewed or edited.
+    API endpoint that allows SharePoint entries to be viewed or edited.
     """
 
     queryset = SharePointModel.objects.all().order_by("id")
     serializer_class = SharePointSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class LokiViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Loki entries to be viewed or edited.
+    """
+
+    queryset = LokiModel.objects.all().order_by("id")
+    serializer_class = LokiSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class DataSetViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows DataSet entries to be viewed or edited.
+    """
+
+    queryset = DataSetModel.objects.all().order_by("id")
+    serializer_class = DataSetSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 

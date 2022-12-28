@@ -34,3 +34,12 @@ class SharePointModel(models.Model):
     sharepoint_site = models.URLField()
     user = models.CharField(max_length=200)
     password = models.TextField()
+
+class LokiModel(models.Model):
+    loki_url = models.URLField()
+    user = models.CharField(max_length=200)
+    token = models.TextField()
+
+class DataSetModel(models.Model):
+    dataset_url = models.URLField()
+    token = models.TextField()
