@@ -62,4 +62,4 @@ class ElasticAPI:
                 break
             except Exception:
                 return traceback.format_exc()
-        return {"result": "success", "index": self.index}
+        return {"destination": "elastic", "result": "success", "index": self.index}

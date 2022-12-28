@@ -40,7 +40,13 @@ def export(args):
             task = asyncio.run(s1_session.getAll())
         results.extend(task)
 
-    return write(args, results)
+    response = []
+    
+    response.extend(writeElastic(args, results))
+    response.extend(writeLoki(args, results))
+    response.extend(writeDataSet(args, results))
+
+    return response
 
 
 @shared_task
@@ -63,10 +69,16 @@ def exportBySite(args):
             task2 = asyncio.run(s1_session.getBySite(site))
             results.extend(task2)
 
-    return write(args, results)
+    response = []
+    
+    response.extend(writeElastic(args, results))
+    response.extend(writeLoki(args, results))
+    response.extend(writeDataSet(args, results))
+
+    return response
 
 
-def write(args, results):
+def writeElastic(args, results):
 
     elastic_config = ElasticModel.objects.all().values()
 

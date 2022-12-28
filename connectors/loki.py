@@ -29,7 +29,7 @@ class LokiAPI:
 
         for result in results:
             result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
-            values.append([str(time_nanosec), json.dumps(result)])
+            values.append([str(result["ts"]), json.dumps(result)])
 
         headers = {"Content-type": "application/json"}
 
@@ -46,4 +46,4 @@ class LokiAPI:
         }
 
         answer = requests.post(self.connectionstring, json=payload, headers=headers)
-        return {"result": "success"}
+        return {"destination": "loki", "result": "success"}

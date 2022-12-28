@@ -19,9 +19,7 @@ class DataSetAPI:
         for result in results:
             result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
             event = {
-                # "thread": "1",
-                "ts": time_nanosec,
-                # "sev": 3,
+                "ts": result["ts"],
                 "attrs": result,
             }
             events.append(event)
@@ -43,4 +41,4 @@ class DataSetAPI:
         answer = requests.post(
             self.url + "/api/addEvents", json=payload, headers=headers
         )
-        return {"result": "success"}
+        return {"destination": "dataset", "result": "success"}

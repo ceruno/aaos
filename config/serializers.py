@@ -1,5 +1,6 @@
 from encodings import utf_8
 from django.contrib.auth.models import User, Group
+import pytz
 from rest_framework import serializers
 from config.models import (
     SentinelOneModel,
@@ -137,6 +138,8 @@ class DataSetSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class CrontabScheduleSerializer(serializers.HyperlinkedModelSerializer):
+    timezone = serializers.ChoiceField(choices=pytz.all_timezones)
+
     class Meta:
         model = CrontabSchedule
         fields = "__all__"
@@ -152,3 +155,4 @@ class PeriodicTaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PeriodicTask
         fields = "__all__"
+        

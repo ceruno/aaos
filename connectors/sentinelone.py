@@ -1,6 +1,7 @@
 import aiohttp
 from datetime import datetime, timedelta
 import pytz
+import time
 
 
 class SentinelOneAPI:
@@ -34,7 +35,7 @@ class SentinelOneAPI:
                 result = result["sites"]
 
             for i in result:
-                values = {"@timestamp": self.tstamp, "managementConsoleUrl": self.url}
+                values = {"@timestamp": self.tstamp, "managementConsoleUrl": self.url, "ts": self.tsns}
                 i.update(values)
 
                 if self.item == "activities":
@@ -53,6 +54,7 @@ class SentinelOneAPI:
     async def getAll(self):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tsns = time.time_ns()
         results = []
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
@@ -69,6 +71,7 @@ class SentinelOneAPI:
     async def getByDelta(self, delta):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tsns = time.time_ns()
         time = self.tstamp - timedelta(minutes=int(delta))
         time_utc = time.astimezone(pytz.timezone("UTC"))
         time_str = time_utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
@@ -89,6 +92,7 @@ class SentinelOneAPI:
     async def get1000(self):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tsns = time.time_ns()
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
             result = await self.get(session)
@@ -98,6 +102,7 @@ class SentinelOneAPI:
     async def getBySite(self, site):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tsns = time.time_ns()
         self.params.update({"siteIds": site["id"]})
         results = []
 
@@ -126,6 +131,7 @@ class SentinelOneAPI:
     async def getByActivityId(self, ids):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tsns = time.time_ns()
         self.params.update({"activityTypes": ids})
         time = self.tstamp - timedelta(days=7)
         time_utc = time.astimezone(pytz.timezone("UTC"))
