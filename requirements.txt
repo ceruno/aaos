@@ -1,0 +1,19 @@
+aiohttp
+asyncio
+celery
+cryptography
+django
+# django-admin-interface
+django-celery-beat
+django-celery-results
+django-cors-headers
+djangorestframework
+djangorestframework-simplejwt
+elasticsearch
+elastic-apm
+flower
+gunicorn
+psycopg2-binary
+pytz
+redis
+shareplum

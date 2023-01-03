@@ -1,0 +1,79 @@
+name: azure
+on:
+  push:
+    branches:
+      - 'dev'
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+        # checkout the repo
+        - name: 'Checkout GitHub Action'
+          uses: actions/checkout@main
+          
+        - name: 'Login via Azure CLI'
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+        - name: 'Build and push images'
+          uses: azure/docker-login@v1
+          with:
+            login-server: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+            username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+            password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+        - run: |
+            docker image prune -a -f
+            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:${{ github.sha }}
+            docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:${{ github.sha }}
+            cd ./web
+            docker build . -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:${{ github.sha }}
+            docker push ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:${{ github.sha }}
+
+        - name: 'Set AKS context'
+          uses: azure/aks-set-context@v3
+          with:
+            resource-group: 'k8s-dev'
+            cluster-name: 'cer1dev'
+
+        - name: 'Set imagePullSecret'
+          uses: azure/k8s-create-secret@v4
+          with:
+            namespace: 'default'
+            secret-name: 'cer1dev-secret'
+            container-registry-url: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+            container-registry-username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+            container-registry-password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+
+        - name: 'Set secrets'
+          uses: azure/k8s-create-secret@v4
+          with:
+            namespace: 'default'
+            secret-type: 'generic'
+            secret-name: aaos-dev
+            string-data: ${{ secrets.AAOS_DEV_SECRET }}
+
+        - name: 'Deploy to AKS'
+          uses: Azure/k8s-deploy@v4.5
+          with: 
+            manifests: |
+              kubernetes/aaos-dev-configmap.yaml
+              kubernetes/broker-deployment.yaml
+              kubernetes/api-deployment.yaml
+              kubernetes/api-service.yaml
+              kubernetes/worker-deployment.yaml
+              kubernetes/scheduler-deployment.yaml
+              kubernetes/monitor-deployment.yaml
+              kubernetes/monitor-service.yaml
+              kubernetes/web-deployment.yaml
+              kubernetes/web-service.yaml
+              kubernetes/issuer-prod-deployment.yaml
+              kubernetes/certificate-deployment.yaml
+              kubernetes/ingress-service.yaml
+            namespace: default
+            images: |
+              ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos:${{ github.sha }}
+              ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/aaos-web:${{ github.sha }}
+            imagepullsecrets: |
+              'cer1dev-secret'

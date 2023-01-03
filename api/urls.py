@@ -1,0 +1,86 @@
+from django.conf import settings
+from django.contrib import admin
+from django.conf.urls.static import static
+from django.urls import path, include
+from rest_framework import routers
+from config import views
+from analytics.sentinelone import views as s1_analytics
+from exports.sentinelone import views as s1_exports
+from exports.freshservice import views as fresh_exports
+from exports.bexio import views as bexio_exports
+from licensing.sentinelone import views as s1_licensing
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
+
+admin.site.site_header = "AAOS - Backend"
+admin.site.site_title = "AAOS - Backend"
+admin.site.index_title = "Welcome"
+
+# router_test = routers.DefaultRouter()
+# router_test.register(r'users/users', views.UserViewSet)
+# router_test.register(r'users/groups', views.GroupViewSet)
+# router_test.register(r'config/s1', views.SentinelOneViewSet)
+# router_test.register(r'config/elastic', views.ElasticViewSet)
+# router_test.register(r'config/fresh', views.FreshServiceViewSet)
+# router_test.register(r'config/bexio', views.BexioViewSet)
+# router_test.register(r'config/sharepoint', views.SharePointViewSet)
+
+router_main = routers.DefaultRouter()
+router_main.register(r"users", views.UserViewSet)
+router_main.register(r"groups", views.GroupViewSet)
+
+router_config = routers.DefaultRouter()
+router_config.register(r"s1", views.SentinelOneViewSet)
+router_config.register(r"elastic", views.ElasticViewSet)
+router_config.register(r"fresh", views.FreshServiceViewSet)
+router_config.register(r"bexio", views.BexioViewSet)
+router_config.register(r"sharepoint", views.SharePointViewSet)
+router_config.register(r"loki", views.LokiViewSet)
+router_config.register(r"dataset", views.DataSetViewSet)
+router_config.register(r"crontabschedule", views.CrontabScheduleViewSet)
+router_config.register(r"intervalschedule", views.IntervalScheduleViewSet)
+router_config.register(r"periodictask", views.PeriodicTaskViewSet)
+
+router_analytics = routers.DefaultRouter()
+router_analytics.register(r"s1", s1_analytics.ExportViewSet, "analytics_s1")
+router_analytics.register(
+    r"s1-debug", s1_analytics.ExportViewSetDebug, "analytics_s1_debug"
+)
+
+router_exports = routers.DefaultRouter()
+router_exports.register(r"bexio", bexio_exports.ExportViewSet, "exports_bexio")
+router_exports.register(
+    r"bexio-debug", bexio_exports.ExportViewSetDebug, "exports_bexio_debug"
+)
+router_exports.register(r"fresh", fresh_exports.ExportViewSet, "exports_fresh")
+router_exports.register(
+    r"fresh-debug", fresh_exports.ExportViewSetDebug, "exports_fresh_debug"
+)
+router_exports.register(r"s1", s1_exports.ExportViewSet, "exports_s1")
+router_exports.register(r"s1-debug", s1_exports.ExportViewSetDebug, "exports_s1_debug")
+
+router_licensing = routers.DefaultRouter()
+router_licensing.register(r"s1", s1_licensing.ExportViewSet, "licensing_s1")
+router_licensing.register(
+    r"s1-debug", s1_licensing.ExportViewSetDebug, "licensing_s1_debug"
+)
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    # path('api/', include(router_test.urls)),
+    path("api/users/", include(router_main.urls)),
+    path("api/config/", include(router_config.urls)),
+    path("api/analytics/", include(router_analytics.urls)),
+    path("api/exports/", include(router_exports.urls)),
+    path("api/licensing/", include(router_licensing.urls)),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
