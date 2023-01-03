@@ -1,3 +1,4 @@
+import datetime
 import json
 import requests
 import re
@@ -28,7 +29,8 @@ class LokiAPI:
         values = []
 
         for result in results:
-            result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
+            if isinstance(result["@timestamp"], datetime.datetime) == True:
+                result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
             values.append([str(result["ts"]), json.dumps(result)])
 
         headers = {"Content-type": "application/json"}
