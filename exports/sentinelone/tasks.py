@@ -48,6 +48,20 @@ def export(args):
 
     return response
 
+@shared_task
+def exportNew(args):
+
+    s1_config = SentinelOneModel.objects.all().values()
+    logger.info("getting S1 config")
+
+    response = []
+    for config in list(s1_config):
+
+        task = exportSingle.delay(args, config)
+        response.append(task.id)
+
+    return response
+
 
 @shared_task
 def exportBySite(args):
@@ -76,6 +90,29 @@ def exportBySite(args):
     response.extend(writeDataSet(args, results))
 
     return response
+
+@shared_task
+def exportSingle(args, config):
+
+    results = []
+    output = []
+    
+    token = (f.decrypt(config["token"])).decode()
+    s1_session = SentinelOneAPI(config["sentinelone_url"], token, args["item"])
+
+    if args["timedelta"] != "":
+        task = asyncio.run(s1_session.getByDelta(args["timedelta"]))
+    elif args["limit"] == "true":
+        task = asyncio.run(s1_session.get1000())
+    else:
+        task = asyncio.run(s1_session.getAll())
+    results.extend(task)
+
+    output.extend(writeElastic(args, results))
+    output.extend(writeLoki(args, results))
+    output.extend(writeDataSet(args, results))
+
+    return output
 
 
 def writeElastic(args, results):
