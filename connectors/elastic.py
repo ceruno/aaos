@@ -1,4 +1,5 @@
 from elasticsearch import Elasticsearch, helpers
+from datetime import datetime
 import traceback
 
 
@@ -33,6 +34,11 @@ class ElasticAPI:
                     )
 
     def write(self, results):
+
+        for node in results:
+        
+            if isinstance(node["@timestamp"], str) == True:
+                node["@timestamp"] = datetime.strptime(node["@timestamp"], "%Y-%m-%dT%H:%M:%S.%f%z")
 
         data = [
             {

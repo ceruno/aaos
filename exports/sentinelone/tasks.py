@@ -16,12 +16,13 @@ import logging
 
 logger = logging.getLogger("aaos")
 
+bySite = ["exclusions", "groups", "installed-applications"]
 key = bytes(os.environ.get("ENCRYPTION_KEY"), "utf-8")
 f = Fernet(key)
 
 
 @shared_task
-def export(args):
+def exportOld(args):
 
     s1_config = SentinelOneModel.objects.all().values()
     logger.info("getting S1 config")
@@ -49,7 +50,7 @@ def export(args):
     return response
 
 @shared_task
-def exportNew(args):
+def exportMain(args):
 
     s1_config = SentinelOneModel.objects.all().values()
     logger.info("getting S1 config")
@@ -57,45 +58,51 @@ def exportNew(args):
     response = []
     for config in list(s1_config):
 
-        task = exportSingle.delay(args, config)
-        response.append(task.id)
+        if args["item"] in bySite:
+
+            task = exportBySite.delay(args, config)
+            response.append(task.id)
+
+        else:
+
+            task = exportByUrl.delay(args, config)
+            response.append(task.id)
 
     return response
 
 
 @shared_task
-def exportBySite(args):
-
-    s1_config = SentinelOneModel.objects.all().values()
+def exportBySite(args, config):
 
     sites = []
     results = []
-    for config in list(s1_config):
 
-        token = (f.decrypt(config["token"])).decode()
-        s1_session = SentinelOneAPI(config["sentinelone_url"], token, "sites")
+    token = (f.decrypt(config["token"])).decode()
+    s1_session = SentinelOneAPI(config["sentinelone_url"], token, "sites")
 
-        task1 = asyncio.run(s1_session.getAll())
-        sites.extend(task1)
+    task1 = asyncio.run(s1_session.getAll())
+    sites.extend(task1)
 
-        for site in sites:
-            s1_session = SentinelOneAPI(config["sentinelone_url"], token, args["item"])
-            task2 = asyncio.run(s1_session.getBySite(site))
-            results.extend(task2)
+    for site in sites:
+        s1_session = SentinelOneAPI(config["sentinelone_url"], token, args["item"])
+        task2 = asyncio.run(s1_session.getBySite(site))
+        results.extend(task2)
 
     response = []
     
-    response.extend(writeElastic(args, results))
-    response.extend(writeLoki(args, results))
-    response.extend(writeDataSet(args, results))
+    elastic_task = writeElastic.delay(args, results)
+    response.append(elastic_task.id)
+    loki_task = writeLoki.delay(args, results)
+    response.append(loki_task.id)
+    dataset_task = writeDataSet.delay(args, results)
+    response.append(dataset_task.id)
 
     return response
 
 @shared_task
-def exportSingle(args, config):
+def exportByUrl(args, config):
 
     results = []
-    output = []
     
     token = (f.decrypt(config["token"])).decode()
     s1_session = SentinelOneAPI(config["sentinelone_url"], token, args["item"])
@@ -108,13 +115,18 @@ def exportSingle(args, config):
         task = asyncio.run(s1_session.getAll())
     results.extend(task)
 
-    output.extend(writeElastic(args, results))
-    output.extend(writeLoki(args, results))
-    output.extend(writeDataSet(args, results))
+    response = []
 
-    return output
+    elastic_task = writeElastic.delay(args, results)
+    response.append(elastic_task.id)
+    loki_task = writeLoki.delay(args, results)
+    response.append(loki_task.id)
+    dataset_task = writeDataSet.delay(args, results)
+    response.append(dataset_task.id)
 
+    return response
 
+@shared_task
 def writeElastic(args, results):
 
     elastic_config = ElasticModel.objects.all().values()
@@ -135,7 +147,7 @@ def writeElastic(args, results):
 
     return result
 
-
+@shared_task
 def writeLoki(args, results):
 
     loki_config = LokiModel.objects.all().values()
@@ -150,7 +162,7 @@ def writeLoki(args, results):
 
     return result
 
-
+@shared_task
 def writeDataSet(args, results):
 
     dataset_config = DataSetModel.objects.all().values()

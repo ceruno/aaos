@@ -60,7 +60,6 @@ router_exports.register(
     r"fresh-debug", fresh_exports.ExportViewSetDebug, "exports_fresh_debug"
 )
 router_exports.register(r"s1", s1_exports.ExportViewSet, "exports_s1")
-router_exports.register(r"s1-debug", s1_exports.ExportViewSetDebug, "exports_s1_debug")
 
 router_licensing = routers.DefaultRouter()
 router_licensing.register(r"s1", s1_licensing.ExportViewSet, "licensing_s1")
