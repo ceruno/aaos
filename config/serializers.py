@@ -155,4 +155,3 @@ class PeriodicTaskSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PeriodicTask
         fields = "__all__"
-        

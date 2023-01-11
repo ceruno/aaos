@@ -71,15 +71,23 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    path('openapi', get_schema_view(
-        title="AAOS",
-        description="Analysis, Automation and Orchestration System",
-        version="0.1.0-alpha"
-    ), name='openapi-schema'),
-    path('swagger-ui/', TemplateView.as_view(
-        template_name='swagger-ui.html',
-        extra_context={'schema_url':'openapi-schema'}
-    ), name='swagger-ui'),
+    path(
+        "openapi",
+        get_schema_view(
+            title="AAOS",
+            description="Analysis, Automation and Orchestration System",
+            version="0.1.0-alpha",
+        ),
+        name="openapi-schema",
+    ),
+    path(
+        "swagger-ui/",
+        TemplateView.as_view(
+            template_name="swagger-ui.html",
+            extra_context={"schema_url": "openapi-schema"},
+        ),
+        name="swagger-ui",
+    ),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

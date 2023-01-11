@@ -30,7 +30,9 @@ class LokiAPI:
 
         for result in results:
             if isinstance(result["@timestamp"], datetime.datetime) == True:
-                result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
+                result["@timestamp"] = result["@timestamp"].strftime(
+                    "%d.%m.%Y, %H:%M:%S"
+                )
             values.append([str(result["ts"]), json.dumps(result)])
 
         headers = {"Content-type": "application/json"}
