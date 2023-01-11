@@ -15,5 +15,7 @@ flower
 gunicorn
 psycopg2-binary
 pytz
+pyyaml
 redis
 shareplum
+uritemplate

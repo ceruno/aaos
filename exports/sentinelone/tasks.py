@@ -42,12 +42,13 @@ def exportOld(args):
         results.extend(task)
 
     response = []
-    
+
     response.extend(writeElastic(args, results))
     response.extend(writeLoki(args, results))
     response.extend(writeDataSet(args, results))
 
     return response
+
 
 @shared_task
 def exportMain(args):
@@ -89,7 +90,7 @@ def exportBySite(args, config):
         results.extend(task2)
 
     response = []
-    
+
     elastic_task = writeElastic.delay(args, results)
     response.append(elastic_task.id)
     loki_task = writeLoki.delay(args, results)
@@ -99,11 +100,12 @@ def exportBySite(args, config):
 
     return response
 
+
 @shared_task
 def exportByUrl(args, config):
 
     results = []
-    
+
     token = (f.decrypt(config["token"])).decode()
     s1_session = SentinelOneAPI(config["sentinelone_url"], token, args["item"])
 
@@ -126,6 +128,7 @@ def exportByUrl(args, config):
 
     return response
 
+
 @shared_task
 def writeElastic(args, results):
 
@@ -147,6 +150,7 @@ def writeElastic(args, results):
 
     return result
 
+
 @shared_task
 def writeLoki(args, results):
 
@@ -161,6 +165,7 @@ def writeLoki(args, results):
         result.append(task)
 
     return result
+
 
 @shared_task
 def writeDataSet(args, results):

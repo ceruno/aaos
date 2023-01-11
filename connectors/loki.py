@@ -2,7 +2,6 @@ import datetime
 import json
 import requests
 import re
-import time
 
 
 class LokiAPI:
@@ -24,13 +23,13 @@ class LokiAPI:
 
     def write(self, results):
 
-        time_nanosec = time.time_ns()
-
         values = []
 
         for result in results:
             if isinstance(result["@timestamp"], datetime.datetime) == True:
-                result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
+                result["@timestamp"] = result["@timestamp"].strftime(
+                    "%d.%m.%Y, %H:%M:%S"
+                )
             values.append([str(result["ts"]), json.dumps(result)])
 
         headers = {"Content-type": "application/json"}

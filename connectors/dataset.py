@@ -1,6 +1,5 @@
 import datetime
 import requests
-import time
 import uuid
 
 
@@ -15,12 +14,12 @@ class DataSetAPI:
     def write(self, results):
 
         events = []
-        time_nanosec = time.time_ns()
 
         for result in results:
             if isinstance(result["@timestamp"], datetime.datetime) == True:
-                result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
-            # result["@timestamp"] = result["@timestamp"].strftime("%d.%m.%Y, %H:%M:%S")
+                result["@timestamp"] = result["@timestamp"].strftime(
+                    "%d.%m.%Y, %H:%M:%S"
+                )
             event = {
                 "ts": result["ts"],
                 "attrs": result,

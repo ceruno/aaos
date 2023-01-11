@@ -35,7 +35,11 @@ class SentinelOneAPI:
                 result = result["sites"]
 
             for i in result:
-                values = {"@timestamp": self.tstamp, "managementConsoleUrl": self.url, "ts": self.tsns}
+                values = {
+                    "@timestamp": self.tstamp,
+                    "managementConsoleUrl": self.url,
+                    "ts": self.tsns,
+                }
                 i.update(values)
 
                 if self.item == "activities":
