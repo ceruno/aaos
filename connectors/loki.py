@@ -2,7 +2,6 @@ import datetime
 import json
 import requests
 import re
-import time
 
 
 class LokiAPI:
@@ -23,8 +22,6 @@ class LokiAPI:
         )
 
     def write(self, results):
-
-        time_nanosec = time.time_ns()
 
         values = []
 
