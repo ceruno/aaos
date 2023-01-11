@@ -17,18 +17,9 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-admin.site.site_header = "AAOS - Backend"
-admin.site.site_title = "AAOS - Backend"
+admin.site.site_header = "AAOS"
+admin.site.site_title = "AAOS"
 admin.site.index_title = "Welcome"
-
-# router_test = routers.DefaultRouter()
-# router_test.register(r'users/users', views.UserViewSet)
-# router_test.register(r'users/groups', views.GroupViewSet)
-# router_test.register(r'config/s1', views.SentinelOneViewSet)
-# router_test.register(r'config/elastic', views.ElasticViewSet)
-# router_test.register(r'config/fresh', views.FreshServiceViewSet)
-# router_test.register(r'config/bexio', views.BexioViewSet)
-# router_test.register(r'config/sharepoint', views.SharePointViewSet)
 
 router_main = routers.DefaultRouter()
 router_main.register(r"users", views.UserViewSet)
@@ -72,7 +63,6 @@ router_licensing.register(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    # path('api/', include(router_test.urls)),
     path("api/users/", include(router_main.urls)),
     path("api/config/", include(router_config.urls)),
     path("api/analytics/", include(router_analytics.urls)),
@@ -84,7 +74,7 @@ urlpatterns = [
     path('openapi', get_schema_view(
         title="AAOS",
         description="Analysis, Automation and Orchestration System",
-        version="1.0"
+        version="0.1.0-alpha"
     ), name='openapi-schema'),
     path('swagger-ui/', TemplateView.as_view(
         template_name='swagger-ui.html',
