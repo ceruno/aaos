@@ -3,7 +3,6 @@ asyncio
 celery
 cryptography
 django
-# django-admin-interface
 django-celery-beat
 django-celery-results
 django-cors-headers
