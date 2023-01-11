@@ -63,14 +63,14 @@ router_licensing.register(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path("api/users/", include(router_main.urls)),
-    path("api/config/", include(router_config.urls)),
-    path("api/analytics/", include(router_analytics.urls)),
-    path("api/exports/", include(router_exports.urls)),
-    path("api/licensing/", include(router_licensing.urls)),
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("users/", include(router_main.urls)),
+    path("config/", include(router_config.urls)),
+    path("analytics/", include(router_analytics.urls)),
+    path("exports/", include(router_exports.urls)),
+    path("licensing/", include(router_licensing.urls)),
+    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path(
         "openapi",
         get_schema_view(

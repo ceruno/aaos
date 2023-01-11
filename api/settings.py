@@ -20,8 +20,6 @@ ALLOWED_HOSTS = [os.environ.get("DJANGO_ALLOWED_HOSTS")]
 # Application definition
 
 INSTALLED_APPS = [
-    # "admin_interface",
-    # "colorfield",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
