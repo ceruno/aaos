@@ -35,12 +35,18 @@ class ElasticAPI:
 
     def write(self, results):
 
+        def parseDateTime(date_time):
+            for format in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%S.%f%z", "%Y-%m-%dT%H:%M:%S.%f" ):
+                try:
+                    return datetime.strptime(date_time, format)
+                except ValueError:
+                    pass
+            raise ValueError("no valid date format found")
+
         for node in results:
 
             if isinstance(node["@timestamp"], str) == True:
-                node["@timestamp"] = datetime.strptime(
-                    node["@timestamp"], "%Y-%m-%dT%H:%M:%S.%f%z"
-                )
+                node["@timestamp"] = parseDateTime(node["@timestamp"])
 
         data = [
             {
@@ -60,9 +66,16 @@ class ElasticAPI:
                 item.update(values)
 
         if self.timestamp == False:
+            # try:
+            #     self.session.indices.create(self.index)
+            # except Exception:
+            #     pass
             for item in data:
-                values = {"_id": item["_source"]["id"]}
-                item.update(values)
+                if self.session.exists(index=self.index, id=str(item["_source"]["id"])):
+                    data.remove(item)
+                else:
+                    values = {"_id": item["_source"]["id"]}
+                    item.update(values)
 
         while True:
             try:
