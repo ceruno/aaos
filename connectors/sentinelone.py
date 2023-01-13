@@ -137,10 +137,10 @@ class SentinelOneAPI:
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
         self.tsns = time.time_ns()
         self.params.update({"activityTypes": ids})
-        time = self.tstamp - timedelta(days=7)
-        time_utc = time.astimezone(pytz.timezone("UTC"))
-        time_str = time_utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        self.params.update({"createdAt__gte": time_str})
+        target_time = self.tstamp - timedelta(days=7)
+        target_time_utc = target_time.astimezone(pytz.timezone("UTC"))
+        target_time_str = target_time_utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        self.params.update({"createdAt__gte": target_time_str})
         results = []
 
         async with aiohttp.ClientSession(headers=self.headers) as session:

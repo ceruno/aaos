@@ -34,9 +34,13 @@ class ElasticAPI:
                     )
 
     def write(self, results):
-
         def parseDateTime(date_time):
-            for format in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%S.%f%z", "%Y-%m-%dT%H:%M:%S.%f" ):
+            for format in (
+                "%Y-%m-%dT%H:%M:%SZ",
+                "%Y-%m-%dT%H:%M:%S.%fZ",
+                "%Y-%m-%dT%H:%M:%S.%f%z",
+                "%Y-%m-%dT%H:%M:%S.%f",
+            ):
                 try:
                     return datetime.strptime(date_time, format)
                 except ValueError:
@@ -66,21 +70,16 @@ class ElasticAPI:
                 item.update(values)
 
         if self.timestamp == False:
-            # try:
-            #     self.session.indices.create(self.index)
-            # except Exception:
-            #     pass
             for item in data:
-                if self.session.exists(index=self.index, id=str(item["_source"]["id"])):
-                    data.remove(item)
-                else:
-                    values = {"_id": item["_source"]["id"]}
-                    item.update(values)
+                values = {"_id": item["_source"]["id"]}
+                item.update(values)
 
         while True:
             try:
                 helpers.bulk(self.session, data)
                 break
+            except helpers.BulkIndexError as error:
+                return {"error": error.args[0], "total_docs": str(len(data))}
             except Exception:
                 return traceback.format_exc()
         return {"destination": "elastic", "result": "success", "index": self.index}
