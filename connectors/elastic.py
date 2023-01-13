@@ -56,9 +56,7 @@ class ElasticAPI:
             {
                 "_op_type": "create",
                 "_index": self.index,
-                "_id": str(node["id"])
-                + " - "
-                + (node["@timestamp"]).strftime("%d.%m.%Y, %H:%M:%S"),
+                "_id": str(node["id"]) + "." + (str(node["ts"])),
                 "_source": node,
             }
             for node in results
@@ -79,7 +77,11 @@ class ElasticAPI:
                 helpers.bulk(self.session, data)
                 break
             except helpers.BulkIndexError as error:
-                return {"destination": "elastic", "result": {"error": error.args[0], "total_docs": str(len(data))}, "index": self.index}
+                return {
+                    "destination": "elastic",
+                    "result": {"error": error.args[0], "total_docs": str(len(data))},
+                    "index": self.index,
+                }
             except Exception:
                 return traceback.format_exc()
         return {"destination": "elastic", "result": "success", "index": self.index}
