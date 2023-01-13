@@ -79,7 +79,7 @@ class ElasticAPI:
                 helpers.bulk(self.session, data)
                 break
             except helpers.BulkIndexError as error:
-                return {"error": error.args[0], "total_docs": str(len(data))}
+                return {"destination": "elastic", "result": {"error": error.args[0], "total_docs": str(len(data))}, "index": self.index}
             except Exception:
                 return traceback.format_exc()
         return {"destination": "elastic", "result": "success", "index": self.index}
