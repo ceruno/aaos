@@ -34,21 +34,29 @@ class ElasticAPI:
                     )
 
     def write(self, results):
+        def parseDateTime(date_time):
+            for format in (
+                "%Y-%m-%dT%H:%M:%SZ",
+                "%Y-%m-%dT%H:%M:%S.%fZ",
+                "%Y-%m-%dT%H:%M:%S.%f%z",
+                "%Y-%m-%dT%H:%M:%S.%f",
+            ):
+                try:
+                    return datetime.strptime(date_time, format)
+                except ValueError:
+                    pass
+            raise ValueError("no valid date format found")
 
         for node in results:
 
             if isinstance(node["@timestamp"], str) == True:
-                node["@timestamp"] = datetime.strptime(
-                    node["@timestamp"], "%Y-%m-%dT%H:%M:%S.%f%z"
-                )
+                node["@timestamp"] = parseDateTime(node["@timestamp"])
 
         data = [
             {
                 "_op_type": "create",
                 "_index": self.index,
-                "_id": str(node["id"])
-                + " - "
-                + (node["@timestamp"]).strftime("%d.%m.%Y, %H:%M:%S"),
+                "_id": str(node["id"]) + "." + (str(node["ts"])),
                 "_source": node,
             }
             for node in results
@@ -68,6 +76,12 @@ class ElasticAPI:
             try:
                 helpers.bulk(self.session, data)
                 break
+            except helpers.BulkIndexError as error:
+                return {
+                    "destination": "elastic",
+                    "result": {"error": error.args[0], "total_docs": str(len(data))},
+                    "index": self.index,
+                }
             except Exception:
                 return traceback.format_exc()
         return {"destination": "elastic", "result": "success", "index": self.index}

@@ -1,7 +1,6 @@
 import aiohttp
-import base64
-import math
 import pytz
+import time
 from datetime import datetime
 
 
@@ -24,6 +23,7 @@ class FreshServiceAPI:
     async def get(self, session):
 
         self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
+        self.tsns = time.time_ns()
 
         async with session.get(self.url + self.endpoint, params=self.params) as resp:
 
@@ -35,6 +35,7 @@ class FreshServiceAPI:
             for i in result:
                 values = {
                     "@timestamp": self.tstamp,
+                    "ts": self.tsns,
                 }
                 i.update(values)
 
@@ -42,7 +43,6 @@ class FreshServiceAPI:
 
     async def getAll(self, groups=None):
 
-        self.tstamp = datetime.now(tz=pytz.timezone("Europe/Zurich"))
         results = []
         page = 1
 
