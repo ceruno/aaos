@@ -10,6 +10,7 @@ from config.models import (
     SharePointModel,
     LokiModel,
     DataSetModel,
+    PostgresModel,
 )
 from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 from cryptography.fernet import Fernet
@@ -189,6 +190,33 @@ class DataSetSerializer(serializers.HyperlinkedModelSerializer):
             f.encrypt(bytes(validated_data["token"], "utf-8"))
         ).decode()
         instance.token = validated_data["token"]
+        instance.save()
+        return instance
+
+
+class PostgresSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = PostgresModel
+        fields = [
+            "url",
+            "host",
+            "port",
+            "db",
+            "user",
+            "password",
+        ]
+
+    def create(self, validated_data):
+        validated_data["password"] = (
+            f.encrypt(bytes(validated_data["password"], "utf-8"))
+        ).decode()
+        return PostgresModel.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data["password"] = (
+            f.encrypt(bytes(validated_data["password"], "utf-8"))
+        ).decode()
+        instance.password = validated_data["password"]
         instance.save()
         return instance
 
