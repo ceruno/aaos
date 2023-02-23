@@ -21,9 +21,8 @@ def exportMain(args):
     response = []
     for config in list(postgres_config):
 
-        response = export(args, config)
-        # task = export.delay(args, config)
-        # response.append(task.id)
+        task = export.delay(args, config)
+        response.append(task.id)
 
     return response
 
