@@ -28,13 +28,28 @@ class PostgresAPI:
 
         data = []
 
-        for i in results:
-            i = dict(i)
+        for result in results:
+            result = dict(result)
             values = {
                 "@timestamp": self.tstamp,
                 "ts": self.tsns,
             }
-            i.update(values)
-            data.append(i)
+            result.update(values)
+
+            match = list(
+                filter(
+                    lambda i: i["id"] == result["id"], data,
+                )
+            )
+
+            if match != []:
+                match = match[0]
+                for key in match.keys():
+                    if match[key] != result[key]:
+                        if not isinstance(match[key], list): match[key] = [match[key]]
+                        match[key].append(result[key])
+
+            else:
+                data.append(result)
 
         return data
