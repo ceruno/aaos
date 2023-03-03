@@ -10,6 +10,7 @@ from config.models import (
     SharePointModel,
     LokiModel,
     DataSetModel,
+    PostgresModel,
 )
 from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 from cryptography.fernet import Fernet
@@ -42,6 +43,14 @@ class SentinelOneSerializer(serializers.HyperlinkedModelSerializer):
         ).decode()
         return SentinelOneModel.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+        validated_data["token"] = (
+            f.encrypt(bytes(validated_data["token"], "utf-8"))
+        ).decode()
+        instance.token = validated_data["token"]
+        instance.save()
+        return instance
+
     # def to_representation(self, instance):
     #     return {
     #         'sentinelone_url': instance.sentinelone_url,
@@ -67,6 +76,14 @@ class ElasticSerializer(serializers.HyperlinkedModelSerializer):
         ).decode()
         return ElasticModel.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+        validated_data["password"] = (
+            f.encrypt(bytes(validated_data["password"], "utf-8"))
+        ).decode()
+        instance.password = validated_data["password"]
+        instance.save()
+        return instance
+
 
 class FreshServiceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -88,6 +105,14 @@ class FreshServiceSerializer(serializers.HyperlinkedModelSerializer):
         ).decode()
         return FreshServiceModel.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+        validated_data["api_key"] = (
+            f.encrypt(bytes(validated_data["api_key"], "utf-8"))
+        ).decode()
+        instance.api_key = validated_data["api_key"]
+        instance.save()
+        return instance
+
 
 class BexioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -99,6 +124,14 @@ class BexioSerializer(serializers.HyperlinkedModelSerializer):
             f.encrypt(bytes(validated_data["api_key"], "utf-8"))
         ).decode()
         return BexioModel.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data["api_key"] = (
+            f.encrypt(bytes(validated_data["api_key"], "utf-8"))
+        ).decode()
+        instance.api_key = validated_data["api_key"]
+        instance.save()
+        return instance
 
 
 class SharePointSerializer(serializers.HyperlinkedModelSerializer):
@@ -112,6 +145,14 @@ class SharePointSerializer(serializers.HyperlinkedModelSerializer):
         ).decode()
         return SharePointModel.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+        validated_data["password"] = (
+            f.encrypt(bytes(validated_data["password"], "utf-8"))
+        ).decode()
+        instance.password = validated_data["password"]
+        instance.save()
+        return instance
+
 
 class LokiSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -124,6 +165,14 @@ class LokiSerializer(serializers.HyperlinkedModelSerializer):
         ).decode()
         return LokiModel.objects.create(**validated_data)
 
+    def update(self, instance, validated_data):
+        validated_data["token"] = (
+            f.encrypt(bytes(validated_data["token"], "utf-8"))
+        ).decode()
+        instance.token = validated_data["token"]
+        instance.save()
+        return instance
+
 
 class DataSetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -135,6 +184,41 @@ class DataSetSerializer(serializers.HyperlinkedModelSerializer):
             f.encrypt(bytes(validated_data["token"], "utf-8"))
         ).decode()
         return DataSetModel.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data["token"] = (
+            f.encrypt(bytes(validated_data["token"], "utf-8"))
+        ).decode()
+        instance.token = validated_data["token"]
+        instance.save()
+        return instance
+
+
+class PostgresSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = PostgresModel
+        fields = [
+            "url",
+            "host",
+            "port",
+            "db",
+            "user",
+            "password",
+        ]
+
+    def create(self, validated_data):
+        validated_data["password"] = (
+            f.encrypt(bytes(validated_data["password"], "utf-8"))
+        ).decode()
+        return PostgresModel.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data["password"] = (
+            f.encrypt(bytes(validated_data["password"], "utf-8"))
+        ).decode()
+        instance.password = validated_data["password"]
+        instance.save()
+        return instance
 
 
 class CrontabScheduleSerializer(serializers.HyperlinkedModelSerializer):

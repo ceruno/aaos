@@ -45,3 +45,11 @@ class LokiModel(models.Model):
 class DataSetModel(models.Model):
     dataset_url = models.URLField()
     token = models.TextField()
+
+
+class PostgresModel(models.Model):
+    host = models.CharField(max_length=200)
+    port = models.BigIntegerField()
+    db = models.CharField(max_length=200)
+    user = models.CharField(max_length=200)
+    password = models.TextField()

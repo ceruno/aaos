@@ -11,6 +11,7 @@ from config.serializers import (
     SharePointSerializer,
     LokiSerializer,
     DataSetSerializer,
+    PostgresSerializer,
     IntervalScheduleSerializer,
     CrontabScheduleSerializer,
     PeriodicTaskSerializer,
@@ -23,6 +24,7 @@ from config.models import (
     SharePointModel,
     LokiModel,
     DataSetModel,
+    PostgresModel,
 )
 from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 
@@ -114,6 +116,16 @@ class DataSetViewSet(viewsets.ModelViewSet):
 
     queryset = DataSetModel.objects.all().order_by("id")
     serializer_class = DataSetSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class PostgresViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Postgres entries to be viewed or edited.
+    """
+
+    queryset = PostgresModel.objects.all().order_by("id")
+    serializer_class = PostgresSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
