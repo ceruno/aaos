@@ -21,6 +21,8 @@ class SentinelOneAPI:
             self.params.update({"riskLevelsNin": "none"})
         if self.item == "activities":
             self.params.update({"sortOrder": "desc"})
+        if self.item == "threats":
+            self.params.update({"sortOrder": "desc", "sortBy": "createdAt"})
 
     async def get(self, session):
 
