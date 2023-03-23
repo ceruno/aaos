@@ -11,6 +11,7 @@ from exports.sentinelone import views as s1_exports
 from exports.freshservice import views as fresh_exports
 from exports.bexio import views as bexio_exports
 from exports.postgres import views as postgres_exports
+from exports.jira import views as jira_exports
 from licensing.sentinelone import views as s1_licensing
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -35,6 +36,7 @@ router_config.register(r"sharepoint", views.SharePointViewSet)
 router_config.register(r"loki", views.LokiViewSet)
 router_config.register(r"dataset", views.DataSetViewSet)
 router_config.register(r"postgres", views.PostgresViewSet)
+router_config.register(r"jira", views.JiraViewSet)
 router_config.register(r"crontabschedule", views.CrontabScheduleViewSet)
 router_config.register(r"intervalschedule", views.IntervalScheduleViewSet)
 router_config.register(r"periodictask", views.PeriodicTaskViewSet)
@@ -56,6 +58,7 @@ router_exports.register(
 )
 router_exports.register(r"s1", s1_exports.ExportViewSet, "exports_s1")
 router_exports.register(r"postgres", postgres_exports.ExportViewSet, "exports_postgres")
+router_exports.register(r"jira", jira_exports.ExportViewSet, "exports_jira")
 
 router_licensing = routers.DefaultRouter()
 router_licensing.register(r"s1", s1_licensing.ExportViewSet, "licensing_s1")

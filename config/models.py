@@ -53,3 +53,9 @@ class PostgresModel(models.Model):
     db = models.CharField(max_length=200)
     user = models.CharField(max_length=200)
     password = models.TextField()
+
+
+class JiraModel(models.Model):
+    jira_url = models.URLField()
+    user = models.CharField(max_length=200)
+    token = models.TextField()

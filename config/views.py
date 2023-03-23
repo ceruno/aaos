@@ -12,6 +12,7 @@ from config.serializers import (
     LokiSerializer,
     DataSetSerializer,
     PostgresSerializer,
+    JiraSerializer,
     IntervalScheduleSerializer,
     CrontabScheduleSerializer,
     PeriodicTaskSerializer,
@@ -25,6 +26,7 @@ from config.models import (
     LokiModel,
     DataSetModel,
     PostgresModel,
+    JiraModel,
 )
 from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 
@@ -126,6 +128,16 @@ class PostgresViewSet(viewsets.ModelViewSet):
 
     queryset = PostgresModel.objects.all().order_by("id")
     serializer_class = PostgresSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class JiraViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Jira entries to be viewed or edited.
+    """
+
+    queryset = JiraModel.objects.all().order_by("id")
+    serializer_class = JiraSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
