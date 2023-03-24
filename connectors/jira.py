@@ -12,14 +12,22 @@ class JiraAPI:
         self.user = config["user"]
         self.token = token
         self.item = args["item"]
-        self.project = args["project"]
         self.endpoint = "/rest/api/3/search"
-        self.params = {
-            "jql": "project=" + self.project,
-            "startAt": 0,
-            "maxResults": 1000,
-            "fields": "*all",
-        }
+        if "jql" in args:
+            self.params = {
+                "jql": args["jql"],
+                "startAt": 0,
+                "maxResults": 100,
+                "fields": "*all",
+            }
+        if "project" in args:
+            self.project = args["project"]
+            self.params = {
+                "jql": "project=" + self.project,
+                "startAt": 0,
+                "maxResults": 100,
+                "fields": "*all",
+            }
         self.credentials = f"{self.user}:{self.token}"
         self.credentials_enc = base64.b64encode(self.credentials.encode()).decode(
             "ascii"
@@ -36,7 +44,7 @@ class JiraAPI:
             assert resp.status == 200
             goal = await resp.json()
             result = goal[self.item]
-            link = resp.links.get("next")
+            total = goal["total"]
 
             for i in result:
                 values = {
@@ -45,7 +53,7 @@ class JiraAPI:
                 }
                 i.update(values)
 
-            return (result, link)
+            return (result, total)
 
     async def getAll(self):
 
@@ -57,8 +65,8 @@ class JiraAPI:
             result = await self.get(session)
             results.extend(result[0])
 
-            while result[1] != None:
-                self.params.update({"cursor": result[1]})
+            while self.params["startAt"] <= result[1]:
+                self.params["startAt"] += 100
                 result = await self.get(session)
                 results.extend(result[0])
 

@@ -38,7 +38,7 @@ def usage(args):
     for config in list(jira_config):
 
         token = (f.decrypt(config["token"])).decode()
-        jira_session = JiraAPI(config, token, {"item": "issues", "project": "CCSC"})
+        jira_session = JiraAPI(config, token, {"item": "issues", "jql": "labels = SentinelOne AND labels = Licensing AND status!=closed",})
         issues_single = asyncio.run(jira_session.getAll())
         issues.extend(issues_single)
 
@@ -389,7 +389,7 @@ def expiration(args):
     for config in list(jira_config):
 
         token = (f.decrypt(config["token"])).decode()
-        jira_session = JiraAPI(config, token, {"item": "issues", "project": "CCSC"})
+        jira_session = JiraAPI(config, token, {"item": "issues", "jql": "labels = SentinelOne AND labels = Licensing AND status!=closed",})
         issues_single = asyncio.run(jira_session.getAll())
         issues.extend(issues_single)
 
@@ -403,7 +403,7 @@ def expiration(args):
             if (
                 (account["expiration"] is not None)
                 and (account["state"] == "active")
-                and (delta.days <= 1000)
+                and (delta.days <= 30)
             ):
                 subject = "SentinelOne: Account Expiration Alert - " + account["name"]
                 description = {
