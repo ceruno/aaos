@@ -94,7 +94,7 @@ class JiraAPI:
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
             async with session.post(self.url + self.endpoint, json=payload) as resp:
-                assert resp.status == 200
+                assert resp.status == 201
                 goal = await resp.json()
                 result = goal["key"]
                 return result
@@ -103,14 +103,19 @@ class JiraAPI:
 
         self.endpoint = "/rest/api/3/issue"
 
-        payload["update"] = payload["fields"]
+        payload["update"] = {
+            "description": [
+                {
+                    "set": payload["fields"]["description"]
+                }
+            ]
+        }
         del payload["fields"]
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
             async with session.put(
                 self.url + self.endpoint + "/" + str(id), json=payload
             ) as resp:
-                assert resp.status == 200
-                goal = await resp.json()
-                result = goal["key"]
+                assert resp.status == 204
+                result = await resp.json()
                 return result
