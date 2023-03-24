@@ -38,7 +38,14 @@ def usage(args):
     for config in list(jira_config):
 
         token = (f.decrypt(config["token"])).decode()
-        jira_session = JiraAPI(config, token, {"item": "issues", "jql": "labels = SentinelOne AND labels = Licensing AND status!=closed",})
+        jira_session = JiraAPI(
+            config,
+            token,
+            {
+                "item": "issues",
+                "jql": "labels = SentinelOne AND labels = Licensing AND status!=closed",
+            },
+        )
         issues_single = asyncio.run(jira_session.getAll())
         issues.extend(issues_single)
 
@@ -90,7 +97,8 @@ def usage(args):
                                 {
                                     "type": "text",
                                     "text": "Usage: "
-                                    + str(math.trunc(usageLicenses * 100)),
+                                    + str(math.trunc(usageLicenses * 100))
+                                    + " %",
                                 },
                                 {"type": "hardBreak"},
                                 {
@@ -195,7 +203,8 @@ def usage(args):
                                 {
                                     "type": "text",
                                     "text": "Usage: "
-                                    + str(math.trunc(usageLicenses * 100)),
+                                    + str(math.trunc(usageLicenses * 100))
+                                    + " %",
                                 },
                                 {"type": "hardBreak"},
                                 {
@@ -389,7 +398,14 @@ def expiration(args):
     for config in list(jira_config):
 
         token = (f.decrypt(config["token"])).decode()
-        jira_session = JiraAPI(config, token, {"item": "issues", "jql": "labels = SentinelOne AND labels = Licensing AND status!=closed",})
+        jira_session = JiraAPI(
+            config,
+            token,
+            {
+                "item": "issues",
+                "jql": "labels = SentinelOne AND labels = Licensing AND status!=closed",
+            },
+        )
         issues_single = asyncio.run(jira_session.getAll())
         issues.extend(issues_single)
 
@@ -463,7 +479,10 @@ def expiration(args):
                 existing_issue = checkIssue(issues, payload)
                 if existing_issue:
                     days = re.findall(
-                        r"Expires in:\ (\d*)\ days", existing_issue["fields"]["description"]["content"][0]["content"][7]["text"],
+                        r"Expires in:\ (\d*)\ days",
+                        existing_issue["fields"]["description"]["content"][0][
+                            "content"
+                        ][7]["text"],
                     )[0]
                     if int(days) != delta.days:
                         asyncio.run(
@@ -514,7 +533,10 @@ def expiration(args):
                                     ],
                                 },
                                 {"type": "hardBreak"},
-                                {"type": "text", "text": "Account: " + site["accountName"]},
+                                {
+                                    "type": "text",
+                                    "text": "Account: " + site["accountName"],
+                                },
                                 {"type": "hardBreak"},
                                 {"type": "text", "text": "Site: " + site["name"]},
                                 {"type": "hardBreak"},
@@ -547,7 +569,10 @@ def expiration(args):
                 existing_issue = checkIssue(issues, payload)
                 if existing_issue:
                     days = re.findall(
-                        r"Expires in:\ (\d*)\ days", existing_issue["fields"]["description"]["content"][0]["content"][9]["text"],
+                        r"Expires in:\ (\d*)\ days",
+                        existing_issue["fields"]["description"]["content"][0][
+                            "content"
+                        ][9]["text"],
                     )[0]
                     if int(days) != delta.days:
                         asyncio.run(

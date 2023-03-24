@@ -111,13 +111,7 @@ class JiraAPI:
 
         self.endpoint = "/rest/api/3/issue"
 
-        payload["update"] = {
-            "description": [
-                {
-                    "set": payload["fields"]["description"]
-                }
-            ]
-        }
+        payload["update"] = {"description": [{"set": payload["fields"]["description"]}]}
         del payload["fields"]
 
         async with aiohttp.ClientSession(headers=self.headers) as session:
