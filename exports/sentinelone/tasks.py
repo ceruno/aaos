@@ -160,7 +160,7 @@ def writeLoki(args, results):
 
     for config in list(loki_config):
         token = (f.decrypt(config["token"])).decode()
-        loki_session = LokiAPI(config, token, args["item"])
+        loki_session = LokiAPI(config, token, "sentinelone", args["item"])
         task = loki_session.write(results)
         result.append(task)
 
@@ -176,7 +176,7 @@ def writeDataSet(args, results):
 
     for config in list(dataset_config):
         token = (f.decrypt(config["token"])).decode()
-        dataset_session = DataSetAPI(config, token, args["item"])
+        dataset_session = DataSetAPI(config, token, "sentinelone", args["item"])
         task = dataset_session.write(results)
         result.append(task)
 
