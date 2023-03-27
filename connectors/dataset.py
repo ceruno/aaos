@@ -4,10 +4,11 @@ import uuid
 
 
 class DataSetAPI:
-    def __init__(self, config, token, item):
+    def __init__(self, config, token, source, item):
 
         self.url = config["dataset_url"]
         self.token = token
+        self.source = source
         self.item = item
         self.uuid = uuid.uuid4()
 
@@ -35,7 +36,7 @@ class DataSetAPI:
             "session": str(self.uuid),
             "sessionInfo": {
                 "item": self.item,
-                "managementConsoleUrl": results[0]["managementConsoleUrl"],
+                "source": self.source,
             },
             "events": events,
         }

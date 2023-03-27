@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "exports.freshservice",
     "exports.bexio",
     "exports.postgres",
+    "exports.jira",
     "licensing.sentinelone",
 ]
 

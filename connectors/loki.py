@@ -5,11 +5,12 @@ import re
 
 
 class LokiAPI:
-    def __init__(self, config, token, item):
+    def __init__(self, config, token, source, item):
 
         self.url = re.findall(r"https://(.*)", config["loki_url"])[0]
         self.user = config["user"]
         self.token = token
+        self.source = source
         self.item = item
         self.connectionstring = (
             "https://"
@@ -39,7 +40,7 @@ class LokiAPI:
                 {
                     "stream": {
                         "item": self.item,
-                        "managementConsoleUrl": results[0]["managementConsoleUrl"],
+                        "source": self.source,
                     },
                     "values": values,
                 }

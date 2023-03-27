@@ -1,9 +1,9 @@
 import asyncio
-from connectors.postgres import PostgresAPI
+from connectors.jira import JiraAPI
 from connectors.elastic import ElasticAPI
 from connectors.loki import LokiAPI
 from connectors.dataset import DataSetAPI
-from config.models import PostgresModel, ElasticModel, LokiModel, DataSetModel
+from config.models import JiraModel, ElasticModel, LokiModel, DataSetModel
 from celery import shared_task
 from cryptography.fernet import Fernet
 import os
@@ -16,10 +16,10 @@ f = Fernet(key)
 @shared_task
 def exportMain(args):
 
-    postgres_config = PostgresModel.objects.all().values()
+    jira_config = JiraModel.objects.all().values()
 
     response = []
-    for config in list(postgres_config):
+    for config in list(jira_config):
 
         task = export.delay(args, config)
         response.append(task.id)
@@ -32,10 +32,10 @@ def export(args, config):
 
     results = []
 
-    password = (f.decrypt(config["password"])).decode()
-    postgres_session = PostgresAPI(config, password, args["query"])
+    token = (f.decrypt(config["token"])).decode()
+    jira_session = JiraAPI(config, token, args)
 
-    task = asyncio.run(postgres_session.get())
+    task = asyncio.run(jira_session.getAll())
     results.extend(task)
 
     response = []
@@ -58,9 +58,6 @@ def writeElastic(args, results):
     result = []
     timestamp = True
 
-    if args["item"] == "activities":
-        timestamp = False
-
     for config in list(elastic_config):
         password = (f.decrypt(config["password"])).decode()
         elastic_session = ElasticAPI(
@@ -81,7 +78,7 @@ def writeLoki(args, results):
 
     for config in list(loki_config):
         token = (f.decrypt(config["token"])).decode()
-        loki_session = LokiAPI(config, token, "postgres", args["item"])
+        loki_session = LokiAPI(config, token, "jira", args["item"])
         task = loki_session.write(results)
         result.append(task)
 
@@ -97,7 +94,7 @@ def writeDataSet(args, results):
 
     for config in list(dataset_config):
         token = (f.decrypt(config["token"])).decode()
-        dataset_session = DataSetAPI(config, token, "postgres", args["item"])
+        dataset_session = DataSetAPI(config, token, "jira", args["item"])
         task = dataset_session.write(results)
         result.append(task)
 

@@ -11,6 +11,7 @@ from config.models import (
     LokiModel,
     DataSetModel,
     PostgresModel,
+    JiraModel,
 )
 from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
 from cryptography.fernet import Fernet
@@ -217,6 +218,26 @@ class PostgresSerializer(serializers.HyperlinkedModelSerializer):
             f.encrypt(bytes(validated_data["password"], "utf-8"))
         ).decode()
         instance.password = validated_data["password"]
+        instance.save()
+        return instance
+
+
+class JiraSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = JiraModel
+        fields = ["url", "jira_url", "user", "token"]
+
+    def create(self, validated_data):
+        validated_data["token"] = (
+            f.encrypt(bytes(validated_data["token"], "utf-8"))
+        ).decode()
+        return JiraModel.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data["token"] = (
+            f.encrypt(bytes(validated_data["token"], "utf-8"))
+        ).decode()
+        instance.token = validated_data["token"]
         instance.save()
         return instance
 
