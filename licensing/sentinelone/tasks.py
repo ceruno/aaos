@@ -414,172 +414,174 @@ def expiration(args):
         jira_session = JiraAPI(config, token, {"item": "issues", "project": "CCSC"})
 
         for account in accounts:
-            expiration = parseDateTime(account["expiration"]).date()
-            delta = expiration - date
-            if (
-                (account["expiration"] is not None)
-                and (account["state"] == "active")
-                and (delta.days <= 30)
-            ):
-                subject = "SentinelOne: Account Expiration Alert - " + account["name"]
-                description = {
-                    "version": 1,
-                    "type": "doc",
-                    "content": [
-                        {
-                            "type": "paragraph",
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": "SentinelOne: Account Expiration Alert",
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Management Console URL: "},
-                                {
-                                    "type": "text",
-                                    "text": account["managementConsoleUrl"],
-                                    "marks": [
-                                        {
-                                            "type": "link",
-                                            "attrs": {
-                                                "href": account["managementConsoleUrl"]
-                                            },
-                                        }
-                                    ],
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Account: " + account["name"]},
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Expires in: " + str(delta.days) + " days",
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Monitoring: "},
-                                {
-                                    "type": "text",
-                                    "text": "https://ccsc.grafana.net",
-                                    "marks": [
-                                        {
-                                            "type": "link",
-                                            "attrs": {
-                                                "href": "https://ccsc.grafana.net/d/wB73j--nz"
-                                            },
-                                        }
-                                    ],
-                                },
-                            ],
-                        }
-                    ],
-                }
-                labels = ["SentinelOne", "Licensing"]
-                payload = asyncio.run(
-                    jira_session.createPayload(subject, description, labels)
-                )
-                existing_issue = checkIssue(issues, payload)
-                if existing_issue:
-                    days = re.findall(
-                        r"Expires in:\ (\d*)\ days",
-                        existing_issue["fields"]["description"]["content"][0][
-                            "content"
-                        ][7]["text"],
-                    )[0]
-                    if int(days) != delta.days:
-                        asyncio.run(
-                            jira_session.putIssue(payload, existing_issue["id"])
-                        )
-                else:
-                    asyncio.run(jira_session.postIssue(payload))
+            if account["expiration"] != None:
+                expiration = parseDateTime(account["expiration"]).date()
+                delta = expiration - date
+                if (
+                    (account["expiration"] != None)
+                    and (account["state"] == "active")
+                    and (delta.days <= 30)
+                ):
+                    subject = "SentinelOne: Account Expiration Alert - " + account["name"]
+                    description = {
+                        "version": 1,
+                        "type": "doc",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "SentinelOne: Account Expiration Alert",
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Management Console URL: "},
+                                    {
+                                        "type": "text",
+                                        "text": account["managementConsoleUrl"],
+                                        "marks": [
+                                            {
+                                                "type": "link",
+                                                "attrs": {
+                                                    "href": account["managementConsoleUrl"]
+                                                },
+                                            }
+                                        ],
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Account: " + account["name"]},
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Expires in: " + str(delta.days) + " days",
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Monitoring: "},
+                                    {
+                                        "type": "text",
+                                        "text": "https://ccsc.grafana.net",
+                                        "marks": [
+                                            {
+                                                "type": "link",
+                                                "attrs": {
+                                                    "href": "https://ccsc.grafana.net/d/wB73j--nz"
+                                                },
+                                            }
+                                        ],
+                                    },
+                                ],
+                            }
+                        ],
+                    }
+                    labels = ["SentinelOne", "Licensing"]
+                    payload = asyncio.run(
+                        jira_session.createPayload(subject, description, labels)
+                    )
+                    existing_issue = checkIssue(issues, payload)
+                    if existing_issue:
+                        days = re.findall(
+                            r"Expires in:\ (\d*)\ days",
+                            existing_issue["fields"]["description"]["content"][0][
+                                "content"
+                            ][7]["text"],
+                        )[0]
+                        if int(days) != delta.days:
+                            asyncio.run(
+                                jira_session.putIssue(payload, existing_issue["id"])
+                            )
+                    else:
+                        asyncio.run(jira_session.postIssue(payload))
 
         for site in sites:
-            expiration = datetime.strptime(
-                site["expiration"], "%Y-%m-%dT%H:%M:%SZ"
-            ).date()
-            delta = expiration - date
-            if (
-                (site["expiration"] != None)
-                and (site["state"] == "active")
-                and (delta.days <= 30)
-            ):
-                subject = (
-                    "SentinelOne: Site Expiration Alert - "
-                    + site["accountName"]
-                    + " - "
-                    + site["name"]
-                )
-                description = {
-                    "version": 1,
-                    "type": "doc",
-                    "content": [
-                        {
-                            "type": "paragraph",
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": "SentinelOne: Site Expiration Alert",
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Management Console URL: "},
-                                {
-                                    "type": "text",
-                                    "text": site["managementConsoleUrl"],
-                                    "marks": [
-                                        {
-                                            "type": "link",
-                                            "attrs": {
-                                                "href": site["managementConsoleUrl"]
-                                            },
-                                        }
-                                    ],
-                                },
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Account: " + site["accountName"],
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Site: " + site["name"]},
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Expires in: " + str(delta.days) + " days",
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Monitoring: "},
-                                {
-                                    "type": "text",
-                                    "text": "https://ccsc.grafana.net",
-                                    "marks": [
-                                        {
-                                            "type": "link",
-                                            "attrs": {
-                                                "href": "https://ccsc.grafana.net/d/wB73j--nz"
-                                            },
-                                        }
-                                    ],
-                                },
-                            ],
-                        }
-                    ],
-                }
-                labels = ["SentinelOne", "Licensing"]
-                payload = asyncio.run(
-                    jira_session.createPayload(subject, description, labels)
-                )
-                existing_issue = checkIssue(issues, payload)
-                if existing_issue:
-                    days = re.findall(
-                        r"Expires in:\ (\d*)\ days",
-                        existing_issue["fields"]["description"]["content"][0][
-                            "content"
-                        ][9]["text"],
-                    )[0]
-                    if int(days) != delta.days:
-                        asyncio.run(
-                            jira_session.putIssue(payload, existing_issue["id"])
-                        )
-                else:
-                    asyncio.run(jira_session.postIssue(payload))
+            if site["expiration"] != None:
+                expiration = datetime.strptime(
+                    site["expiration"], "%Y-%m-%dT%H:%M:%SZ"
+                ).date()
+                delta = expiration - date
+                if (
+                    (site["expiration"] != None)
+                    and (site["state"] == "active")
+                    and (delta.days <= 30)
+                ):
+                    subject = (
+                        "SentinelOne: Site Expiration Alert - "
+                        + site["accountName"]
+                        + " - "
+                        + site["name"]
+                    )
+                    description = {
+                        "version": 1,
+                        "type": "doc",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "SentinelOne: Site Expiration Alert",
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Management Console URL: "},
+                                    {
+                                        "type": "text",
+                                        "text": site["managementConsoleUrl"],
+                                        "marks": [
+                                            {
+                                                "type": "link",
+                                                "attrs": {
+                                                    "href": site["managementConsoleUrl"]
+                                                },
+                                            }
+                                        ],
+                                    },
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Account: " + site["accountName"],
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Site: " + site["name"]},
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Expires in: " + str(delta.days) + " days",
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Monitoring: "},
+                                    {
+                                        "type": "text",
+                                        "text": "https://ccsc.grafana.net",
+                                        "marks": [
+                                            {
+                                                "type": "link",
+                                                "attrs": {
+                                                    "href": "https://ccsc.grafana.net/d/wB73j--nz"
+                                                },
+                                            }
+                                        ],
+                                    },
+                                ],
+                            }
+                        ],
+                    }
+                    labels = ["SentinelOne", "Licensing"]
+                    payload = asyncio.run(
+                        jira_session.createPayload(subject, description, labels)
+                    )
+                    existing_issue = checkIssue(issues, payload)
+                    if existing_issue:
+                        days = re.findall(
+                            r"Expires in:\ (\d*)\ days",
+                            existing_issue["fields"]["description"]["content"][0][
+                                "content"
+                            ][9]["text"],
+                        )[0]
+                        if int(days) != delta.days:
+                            asyncio.run(
+                                jira_session.putIssue(payload, existing_issue["id"])
+                            )
+                    else:
+                        asyncio.run(jira_session.postIssue(payload))
 
 
 @shared_task
@@ -618,76 +620,78 @@ def expiration_fresh(args):
         fresh_session = FreshServiceAPI(config, api_key, "tickets")
 
         for account in accounts:
-            expiration = parseDateTime(account["expiration"]).date()
-            delta = expiration - date
-            if (
-                (account["expiration"] is not None)
-                and (account["state"] == "active")
-                and (delta.days <= 30)
-            ):
-                subject = "SentinelOne: Account Expiration Alert - " + account["name"]
-                description = (
-                    "SentinelOne: Account Expiration Alert<br>"
-                    "Management Console URL: "
-                    + account["managementConsoleUrl"]
-                    + "<br>"
-                    "Account: " + account["name"] + "<br>"
-                    "Expires in: " + str(delta.days) + " days"
-                )
-                tags = ["SentinelOne", "Licensing"]
-                payload = asyncio.run(
-                    fresh_session.createPayload(subject, description, tags)
-                )
-                existing_ticket = checkTicket(tickets, payload)
-                if existing_ticket:
-                    days = re.findall(
-                        r"Expires in:\ (\d*)\ days", existing_ticket["description"]
-                    )[0]
-                    if int(days) != delta.days:
-                        asyncio.run(
-                            fresh_session.putTicket(existing_ticket["id"], payload)
-                        )
-                else:
-                    asyncio.run(fresh_session.postTicket(payload))
+            if account["expiration"] != None:
+                expiration = parseDateTime(account["expiration"]).date()
+                delta = expiration - date
+                if (
+                    (account["expiration"] != None)
+                    and (account["state"] == "active")
+                    and (delta.days <= 30)
+                ):
+                    subject = "SentinelOne: Account Expiration Alert - " + account["name"]
+                    description = (
+                        "SentinelOne: Account Expiration Alert<br>"
+                        "Management Console URL: "
+                        + account["managementConsoleUrl"]
+                        + "<br>"
+                        "Account: " + account["name"] + "<br>"
+                        "Expires in: " + str(delta.days) + " days"
+                    )
+                    tags = ["SentinelOne", "Licensing"]
+                    payload = asyncio.run(
+                        fresh_session.createPayload(subject, description, tags)
+                    )
+                    existing_ticket = checkTicket(tickets, payload)
+                    if existing_ticket:
+                        days = re.findall(
+                            r"Expires in:\ (\d*)\ days", existing_ticket["description"]
+                        )[0]
+                        if int(days) != delta.days:
+                            asyncio.run(
+                                fresh_session.putTicket(existing_ticket["id"], payload)
+                            )
+                    else:
+                        asyncio.run(fresh_session.postTicket(payload))
 
         for site in sites:
-            expiration = datetime.strptime(
-                site["expiration"], "%Y-%m-%dT%H:%M:%SZ"
-            ).date()
-            delta = expiration - date
-            if (
-                (site["expiration"] != None)
-                and (site["state"] == "active")
-                and (delta.days <= 30)
-            ):
-                subject = (
-                    "SentinelOne: Site Expiration Alert - "
-                    + site["accountName"]
-                    + " - "
-                    + site["name"]
-                )
-                description = (
-                    "SentinelOne: Site Expiration Alert<br>"
-                    "Management Console URL: " + site["managementConsoleUrl"] + "<br>"
-                    "Account: " + site["accountName"] + "<br>"
-                    "Site: " + site["name"] + "<br>"
-                    "Expires in: " + str(delta.days) + " days"
-                )
-                tags = ["SentinelOne", "Licensing"]
-                payload = asyncio.run(
-                    fresh_session.createPayload(subject, description, tags)
-                )
-                existing_ticket = checkTicket(tickets, payload)
-                if existing_ticket:
-                    days = re.findall(
-                        r"Expires in:\ (\d*)\ days", existing_ticket["description"]
-                    )[0]
-                    if int(days) != delta.days:
-                        asyncio.run(
-                            fresh_session.putTicket(existing_ticket["id"], payload)
-                        )
-                else:
-                    asyncio.run(fresh_session.postTicket(payload))
+            if site["expiration"] != None:
+                expiration = datetime.strptime(
+                    site["expiration"], "%Y-%m-%dT%H:%M:%SZ"
+                ).date()
+                delta = expiration - date
+                if (
+                    (site["expiration"] != None)
+                    and (site["state"] == "active")
+                    and (delta.days <= 30)
+                ):
+                    subject = (
+                        "SentinelOne: Site Expiration Alert - "
+                        + site["accountName"]
+                        + " - "
+                        + site["name"]
+                    )
+                    description = (
+                        "SentinelOne: Site Expiration Alert<br>"
+                        "Management Console URL: " + site["managementConsoleUrl"] + "<br>"
+                        "Account: " + site["accountName"] + "<br>"
+                        "Site: " + site["name"] + "<br>"
+                        "Expires in: " + str(delta.days) + " days"
+                    )
+                    tags = ["SentinelOne", "Licensing"]
+                    payload = asyncio.run(
+                        fresh_session.createPayload(subject, description, tags)
+                    )
+                    existing_ticket = checkTicket(tickets, payload)
+                    if existing_ticket:
+                        days = re.findall(
+                            r"Expires in:\ (\d*)\ days", existing_ticket["description"]
+                        )[0]
+                        if int(days) != delta.days:
+                            asyncio.run(
+                                fresh_session.putTicket(existing_ticket["id"], payload)
+                            )
+                    else:
+                        asyncio.run(fresh_session.postTicket(payload))
 
 
 def checkTicket(tickets, payload):
