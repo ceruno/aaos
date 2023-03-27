@@ -51,208 +51,204 @@ def usage(args):
 
     for config in list(jira_config):
 
-        jira_session = JiraAPI(config, token, {"item": "issues", "project": "CCSC"})
+        jira_session = JiraAPI(config, token, {"item": "issues", "project": args["project"]})
 
         for account in accounts:
 
-            if account["totalLicenses"] == 0:
-                usageLicenses = 0
-            else:
+            if account["totalLicenses"] != 0:
                 usageLicenses = account["activeAgents"] / account["totalLicenses"]
-            usageLicensesDifference = account["activeAgents"] - account["totalLicenses"]
+                usageLicensesDifference = account["activeAgents"] - account["totalLicenses"]
 
-            if (account["state"] == "active") and (
-                (usageLicenses >= 1.05 and usageLicensesDifference >= 10)
-                or (usageLicensesDifference >= 100)
-            ):
-                subject = "SentinelOne: Account Usage Alert - " + account["name"]
-                description = {
-                    "version": 1,
-                    "type": "doc",
-                    "content": [
-                        {
-                            "type": "paragraph",
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": "SentinelOne: Licensing Alert",
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Management Console URL: "},
-                                {
-                                    "type": "text",
-                                    "text": account["managementConsoleUrl"],
-                                    "marks": [
-                                        {
-                                            "type": "link",
-                                            "attrs": {
-                                                "href": account["managementConsoleUrl"]
-                                            },
-                                        }
-                                    ],
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Account: " + account["name"]},
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Usage: "
-                                    + str(math.trunc(usageLicenses * 100))
-                                    + " %",
-                                },
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Licensed: "
-                                    + str(account["totalLicenses"]),
-                                },
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Overprovisioned: "
-                                    + str(usageLicensesDifference),
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Monitoring: "},
-                                {
-                                    "type": "text",
-                                    "text": "https://ccsc.grafana.net",
-                                    "marks": [
-                                        {
-                                            "type": "link",
-                                            "attrs": {
-                                                "href": "https://ccsc.grafana.net/d/wB73j--nz"
-                                            },
-                                        }
-                                    ],
-                                },
-                            ],
-                        }
-                    ],
-                }
-                labels = ["SentinelOne", "Licensing"]
-                payload = asyncio.run(
-                    jira_session.createPayload(subject, description, labels)
-                )
-                existing_issue = checkIssue(issues, payload)
-                if existing_issue:
-                    overprovisioned = re.findall(
-                        r"Overprovisioned:\ (\d*)",
-                        existing_issue["fields"]["description"]["content"][0][
-                            "content"
-                        ][11]["text"],
-                    )[0]
-                    if int(overprovisioned) != usageLicensesDifference:
-                        asyncio.run(
-                            jira_session.putIssue(payload, existing_issue["id"])
-                        )
-                else:
-                    asyncio.run(jira_session.postIssue(payload))
+                if (account["state"] == "active") and (
+                    (usageLicenses >= 1.05 and usageLicensesDifference >= 10)
+                    or (usageLicensesDifference >= 100)
+                ):
+                    subject = "SentinelOne: Account Usage Alert - " + account["name"]
+                    description = {
+                        "version": 1,
+                        "type": "doc",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "SentinelOne: Licensing Alert",
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Management Console URL: "},
+                                    {
+                                        "type": "text",
+                                        "text": account["managementConsoleUrl"],
+                                        "marks": [
+                                            {
+                                                "type": "link",
+                                                "attrs": {
+                                                    "href": account["managementConsoleUrl"]
+                                                },
+                                            }
+                                        ],
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Account: " + account["name"]},
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Usage: "
+                                        + str(math.trunc(usageLicenses * 100))
+                                        + " %",
+                                    },
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Licensed: "
+                                        + str(account["totalLicenses"]),
+                                    },
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Overprovisioned: "
+                                        + str(usageLicensesDifference),
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Monitoring: "},
+                                    {
+                                        "type": "text",
+                                        "text": "https://ccsc.grafana.net",
+                                        "marks": [
+                                            {
+                                                "type": "link",
+                                                "attrs": {
+                                                    "href": "https://ccsc.grafana.net/d/wB73j--nz"
+                                                },
+                                            }
+                                        ],
+                                    },
+                                ],
+                            }
+                        ],
+                    }
+                    labels = ["SentinelOne", "Licensing"]
+                    payload = asyncio.run(
+                        jira_session.createPayload(subject, description, labels)
+                    )
+                    existing_issue = checkIssue(issues, payload)
+                    if existing_issue:
+                        overprovisioned = re.findall(
+                            r"Overprovisioned:\ (\d*)",
+                            existing_issue["fields"]["description"]["content"][0][
+                                "content"
+                            ][11]["text"],
+                        )[0]
+                        if int(overprovisioned) != usageLicensesDifference:
+                            asyncio.run(
+                                jira_session.putIssue(payload, existing_issue["id"])
+                            )
+                    else:
+                        asyncio.run(jira_session.postIssue(payload))
 
         for site in sites:
 
-            if site["totalLicenses"] == 0:
-                usageLicenses = 0
-            else:
+            if site["totalLicenses"] != 0:
                 usageLicenses = site["activeLicenses"] / site["totalLicenses"]
-            usageLicensesDifference = site["activeLicenses"] - site["totalLicenses"]
+                usageLicensesDifference = site["activeLicenses"] - site["totalLicenses"]
 
-            if (site["state"] == "active") and (
-                (usageLicenses >= 1.05 and usageLicensesDifference >= 10)
-                or (usageLicensesDifference >= 100)
-            ):
-                subject = (
-                    "SentinelOne: Site Usage Alert - "
-                    + site["accountName"]
-                    + " - "
-                    + site["name"]
-                )
-                description = {
-                    "version": 1,
-                    "type": "doc",
-                    "content": [
-                        {
-                            "type": "paragraph",
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": "SentinelOne: Licensing Alert",
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Management Console URL: "},
-                                {
-                                    "type": "text",
-                                    "text": site["managementConsoleUrl"],
-                                    "marks": [
-                                        {
-                                            "type": "link",
-                                            "attrs": {
-                                                "href": site["managementConsoleUrl"]
-                                            },
-                                        }
-                                    ],
-                                },
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Account: " + site["accountName"],
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Site: " + site["name"]},
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Usage: "
-                                    + str(math.trunc(usageLicenses * 100))
-                                    + " %",
-                                },
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Licensed: " + str(site["totalLicenses"]),
-                                },
-                                {"type": "hardBreak"},
-                                {
-                                    "type": "text",
-                                    "text": "Overprovisioned: "
-                                    + str(usageLicensesDifference),
-                                },
-                                {"type": "hardBreak"},
-                                {"type": "text", "text": "Monitoring: "},
-                                {
-                                    "type": "text",
-                                    "text": "https://ccsc.grafana.net",
-                                    "marks": [
-                                        {
-                                            "type": "link",
-                                            "attrs": {
-                                                "href": "https://ccsc.grafana.net/d/wB73j--nz"
-                                            },
-                                        }
-                                    ],
-                                },
-                            ],
-                        }
-                    ],
-                }
-                labels = ["SentinelOne", "Licensing"]
-                payload = asyncio.run(
-                    jira_session.createPayload(subject, description, labels)
-                )
-                existing_issue = checkIssue(issues, payload)
-                if existing_issue:
-                    overprovisioned = re.findall(
-                        r"Overprovisioned:\ (\d*)",
-                        existing_issue["fields"]["description"]["content"][0][
-                            "content"
-                        ][13]["text"],
-                    )[0]
-                    if int(overprovisioned) != usageLicensesDifference:
-                        asyncio.run(
-                            jira_session.putIssue(payload, existing_issue["id"])
-                        )
-                else:
-                    asyncio.run(jira_session.postIssue(payload))
+                if (site["state"] == "active") and (
+                    (usageLicenses >= 1.05 and usageLicensesDifference >= 10)
+                    or (usageLicensesDifference >= 100)
+                ):
+                    subject = (
+                        "SentinelOne: Site Usage Alert - "
+                        + site["accountName"]
+                        + " - "
+                        + site["name"]
+                    )
+                    description = {
+                        "version": 1,
+                        "type": "doc",
+                        "content": [
+                            {
+                                "type": "paragraph",
+                                "content": [
+                                    {
+                                        "type": "text",
+                                        "text": "SentinelOne: Licensing Alert",
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Management Console URL: "},
+                                    {
+                                        "type": "text",
+                                        "text": site["managementConsoleUrl"],
+                                        "marks": [
+                                            {
+                                                "type": "link",
+                                                "attrs": {
+                                                    "href": site["managementConsoleUrl"]
+                                                },
+                                            }
+                                        ],
+                                    },
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Account: " + site["accountName"],
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Site: " + site["name"]},
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Usage: "
+                                        + str(math.trunc(usageLicenses * 100))
+                                        + " %",
+                                    },
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Licensed: " + str(site["totalLicenses"]),
+                                    },
+                                    {"type": "hardBreak"},
+                                    {
+                                        "type": "text",
+                                        "text": "Overprovisioned: "
+                                        + str(usageLicensesDifference),
+                                    },
+                                    {"type": "hardBreak"},
+                                    {"type": "text", "text": "Monitoring: "},
+                                    {
+                                        "type": "text",
+                                        "text": "https://ccsc.grafana.net",
+                                        "marks": [
+                                            {
+                                                "type": "link",
+                                                "attrs": {
+                                                    "href": "https://ccsc.grafana.net/d/wB73j--nz"
+                                                },
+                                            }
+                                        ],
+                                    },
+                                ],
+                            }
+                        ],
+                    }
+                    labels = ["SentinelOne", "Licensing"]
+                    payload = asyncio.run(
+                        jira_session.createPayload(subject, description, labels)
+                    )
+                    existing_issue = checkIssue(issues, payload)
+                    if existing_issue:
+                        overprovisioned = re.findall(
+                            r"Overprovisioned:\ (\d*)",
+                            existing_issue["fields"]["description"]["content"][0][
+                                "content"
+                            ][13]["text"],
+                        )[0]
+                        if int(overprovisioned) != usageLicensesDifference:
+                            asyncio.run(
+                                jira_session.putIssue(payload, existing_issue["id"])
+                            )
+                    else:
+                        asyncio.run(jira_session.postIssue(payload))
 
 
 @shared_task
@@ -411,7 +407,7 @@ def expiration(args):
 
     for config in list(jira_config):
 
-        jira_session = JiraAPI(config, token, {"item": "issues", "project": "CCSC"})
+        jira_session = JiraAPI(config, token, {"item": "issues", "project": args["project"]})
 
         for account in accounts:
             if account["expiration"] != None:
