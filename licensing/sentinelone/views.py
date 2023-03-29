@@ -31,7 +31,7 @@ class ExportViewSet(viewsets.GenericViewSet):
                         task = usage_fresh.delay(serializer.data)
                         result = {"task_id": task.id}
                     case _:
-                        result = "bad parameter"    
+                        result = "bad parameter"
             case "expiration":
                 match serializer.data["target"]:
                     case "jira":
@@ -41,7 +41,7 @@ class ExportViewSet(viewsets.GenericViewSet):
                         task = expiration_fresh.delay(serializer.data)
                         result = {"task_id": task.id}
                     case _:
-                        result = "bad parameter"                   
+                        result = "bad parameter"
             case _:
                 result = "bad parameter"
         response_post = {
@@ -70,7 +70,7 @@ class ExportViewSetDebug(viewsets.GenericViewSet):
                     case "freshservice":
                         result = usage_fresh(serializer.data)
                     case _:
-                        result = "bad parameter"  
+                        result = "bad parameter"
             case "expiration":
                 match serializer.data["target"]:
                     case "jira":
@@ -78,7 +78,7 @@ class ExportViewSetDebug(viewsets.GenericViewSet):
                     case "freshservice":
                         result = expiration_fresh(serializer.data)
                     case _:
-                        result = "bad parameter"  
+                        result = "bad parameter"
             case _:
                 result = "bad parameter"
         response_post = {

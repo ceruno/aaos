@@ -13,14 +13,14 @@ class JiraAPI:
         self.token = token
         self.item = args["item"]
         self.endpoint = "/rest/api/3/search"
-        if "jql" in args:
+        if "jql" in args and args["jql"] != "":
             self.params = {
                 "jql": args["jql"],
                 "startAt": 0,
                 "maxResults": 100,
                 "fields": "*all",
             }
-        if "project" in args:
+        if "project" in args and args["project"] != "":
             self.project = args["project"]
             self.params = {
                 "jql": "project=" + self.project,
