@@ -51,13 +51,17 @@ def usage(args):
 
     for config in list(jira_config):
 
-        jira_session = JiraAPI(config, token, {"item": "issues", "project": args["project"]})
+        jira_session = JiraAPI(
+            config, token, {"item": "issues", "project": args["project"]}
+        )
 
         for account in accounts:
 
             if account["totalLicenses"] != 0:
                 usageLicenses = account["activeAgents"] / account["totalLicenses"]
-                usageLicensesDifference = account["activeAgents"] - account["totalLicenses"]
+                usageLicensesDifference = (
+                    account["activeAgents"] - account["totalLicenses"]
+                )
 
                 if (account["state"] == "active") and (
                     (usageLicenses >= 1.05 and usageLicensesDifference >= 10)
@@ -76,7 +80,10 @@ def usage(args):
                                         "text": "SentinelOne: Licensing Alert",
                                     },
                                     {"type": "hardBreak"},
-                                    {"type": "text", "text": "Management Console URL: "},
+                                    {
+                                        "type": "text",
+                                        "text": "Management Console URL: ",
+                                    },
                                     {
                                         "type": "text",
                                         "text": account["managementConsoleUrl"],
@@ -84,13 +91,18 @@ def usage(args):
                                             {
                                                 "type": "link",
                                                 "attrs": {
-                                                    "href": account["managementConsoleUrl"]
+                                                    "href": account[
+                                                        "managementConsoleUrl"
+                                                    ]
                                                 },
                                             }
                                         ],
                                     },
                                     {"type": "hardBreak"},
-                                    {"type": "text", "text": "Account: " + account["name"]},
+                                    {
+                                        "type": "text",
+                                        "text": "Account: " + account["name"],
+                                    },
                                     {"type": "hardBreak"},
                                     {
                                         "type": "text",
@@ -175,7 +187,10 @@ def usage(args):
                                         "text": "SentinelOne: Licensing Alert",
                                     },
                                     {"type": "hardBreak"},
-                                    {"type": "text", "text": "Management Console URL: "},
+                                    {
+                                        "type": "text",
+                                        "text": "Management Console URL: ",
+                                    },
                                     {
                                         "type": "text",
                                         "text": site["managementConsoleUrl"],
@@ -205,7 +220,8 @@ def usage(args):
                                     {"type": "hardBreak"},
                                     {
                                         "type": "text",
-                                        "text": "Licensed: " + str(site["totalLicenses"]),
+                                        "text": "Licensed: "
+                                        + str(site["totalLicenses"]),
                                     },
                                     {"type": "hardBreak"},
                                     {
@@ -407,7 +423,9 @@ def expiration(args):
 
     for config in list(jira_config):
 
-        jira_session = JiraAPI(config, token, {"item": "issues", "project": args["project"]})
+        jira_session = JiraAPI(
+            config, token, {"item": "issues", "project": args["project"]}
+        )
 
         for account in accounts:
             if account["expiration"] != None:
@@ -418,7 +436,9 @@ def expiration(args):
                     and (account["state"] == "active")
                     and (delta.days <= 30)
                 ):
-                    subject = "SentinelOne: Account Expiration Alert - " + account["name"]
+                    subject = (
+                        "SentinelOne: Account Expiration Alert - " + account["name"]
+                    )
                     description = {
                         "version": 1,
                         "type": "doc",
@@ -431,7 +451,10 @@ def expiration(args):
                                         "text": "SentinelOne: Account Expiration Alert",
                                     },
                                     {"type": "hardBreak"},
-                                    {"type": "text", "text": "Management Console URL: "},
+                                    {
+                                        "type": "text",
+                                        "text": "Management Console URL: ",
+                                    },
                                     {
                                         "type": "text",
                                         "text": account["managementConsoleUrl"],
@@ -439,17 +462,24 @@ def expiration(args):
                                             {
                                                 "type": "link",
                                                 "attrs": {
-                                                    "href": account["managementConsoleUrl"]
+                                                    "href": account[
+                                                        "managementConsoleUrl"
+                                                    ]
                                                 },
                                             }
                                         ],
                                     },
                                     {"type": "hardBreak"},
-                                    {"type": "text", "text": "Account: " + account["name"]},
+                                    {
+                                        "type": "text",
+                                        "text": "Account: " + account["name"],
+                                    },
                                     {"type": "hardBreak"},
                                     {
                                         "type": "text",
-                                        "text": "Expires in: " + str(delta.days) + " days",
+                                        "text": "Expires in: "
+                                        + str(delta.days)
+                                        + " days",
                                     },
                                     {"type": "hardBreak"},
                                     {"type": "text", "text": "Monitoring: "},
@@ -517,7 +547,10 @@ def expiration(args):
                                         "text": "SentinelOne: Site Expiration Alert",
                                     },
                                     {"type": "hardBreak"},
-                                    {"type": "text", "text": "Management Console URL: "},
+                                    {
+                                        "type": "text",
+                                        "text": "Management Console URL: ",
+                                    },
                                     {
                                         "type": "text",
                                         "text": site["managementConsoleUrl"],
@@ -540,7 +573,9 @@ def expiration(args):
                                     {"type": "hardBreak"},
                                     {
                                         "type": "text",
-                                        "text": "Expires in: " + str(delta.days) + " days",
+                                        "text": "Expires in: "
+                                        + str(delta.days)
+                                        + " days",
                                     },
                                     {"type": "hardBreak"},
                                     {"type": "text", "text": "Monitoring: "},
@@ -624,7 +659,9 @@ def expiration_fresh(args):
                     and (account["state"] == "active")
                     and (delta.days <= 30)
                 ):
-                    subject = "SentinelOne: Account Expiration Alert - " + account["name"]
+                    subject = (
+                        "SentinelOne: Account Expiration Alert - " + account["name"]
+                    )
                     description = (
                         "SentinelOne: Account Expiration Alert<br>"
                         "Management Console URL: "
@@ -668,7 +705,9 @@ def expiration_fresh(args):
                     )
                     description = (
                         "SentinelOne: Site Expiration Alert<br>"
-                        "Management Console URL: " + site["managementConsoleUrl"] + "<br>"
+                        "Management Console URL: "
+                        + site["managementConsoleUrl"]
+                        + "<br>"
                         "Account: " + site["accountName"] + "<br>"
                         "Site: " + site["name"] + "<br>"
                         "Expires in: " + str(delta.days) + " days"
