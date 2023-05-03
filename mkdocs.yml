@@ -1,0 +1,40 @@
+site_name: AAOS
+theme:
+  name: material
+  palette: 
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    logo: material/code-json
+  features:
+    - navigation.tabs
+    - navigation.footer
+repo_url: https://github.com/ceruno/aaos
+repo_name: ceruno/aaos
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ceruno
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/ceruno
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/ceruno-ag
+nav:
+    - Home: 
+        - About: 'index.md'
+        - Installation: 'install.md'
+    - Exports:
+        - Freshservice: 'exports/exports-freshservice.md'
+        - Jira: 'exports/exports-jira.md'
+        - SentinelOne: 'exports/exports-sentinelone.md'
+    - Analytics:
+        - SentinelOne: 'analytics-setinelone.md'
+    
