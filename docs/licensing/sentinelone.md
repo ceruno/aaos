@@ -1,3 +1,6 @@
+!!! info "Endpoint"
+    [/licensing](../licensing)
+
 ## Expiration
 
 !!! info "Threshold"  
@@ -7,7 +10,7 @@
 ### Configuration
 
 To check for the expiration, the job item is `expiration`. Use `jira` or `fresh` as destination.  
-The project key is case sensitive.
+The project key is used for `jira` only and case sensitive.
 
 ## Usage
 
@@ -21,5 +24,5 @@ The project key is case sensitive.
 ### Configuration
 
 To check for the usage, the job item is `usage`. Use `jira` or `fresh` as destination.  
-The project key is case sensitive.
+The project key is used for `jira` only and case sensitive.
 
