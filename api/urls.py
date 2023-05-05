@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.urls import path, include
+from django.shortcuts import redirect
 from django.views.generic import TemplateView
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
@@ -18,6 +19,9 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+
+def redirect_to_docs(request):
+    return redirect("/docs/")
 
 admin.site.site_header = "AAOS"
 admin.site.site_title = "AAOS"
@@ -67,6 +71,7 @@ router_licensing.register(
 )
 
 urlpatterns = [
+    path("", redirect_to_docs, name="redirect-to-docs"),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("users/", include(router_main.urls)),

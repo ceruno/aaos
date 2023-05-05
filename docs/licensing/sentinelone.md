@@ -1,12 +1,10 @@
 This function fetches all the licensing information from SentinelOne accounts and sites.
 
-!!! note annotate "[Endpoint]"  
+!!! note annotate "Endpoint"  
 
     ``` http
     GET /licensing/s1
     ```
-
-    [Endpoint]: ../licensing/s1 "Direct Link"
 
 ## Expiration
 

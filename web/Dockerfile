@@ -8,3 +8,6 @@ COPY ./static /static
 
 WORKDIR /media
 COPY ./media /media
+
+WORKDIR /docs
+COPY ./docs /docs

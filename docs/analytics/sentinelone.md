@@ -1,12 +1,11 @@
 This function fetches activities information from the SentinelOne management console.
 
-!!! note annotate "[Endpoint]"  
+!!! note annotate "Endpoint"  
 
     ``` http
     GET /analytics/s1
     ```
 
-    [Endpoint]: ../analytics/s1 "Direct Link"
 
 ## Update
 

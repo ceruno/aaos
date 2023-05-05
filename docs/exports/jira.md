@@ -1,12 +1,10 @@
-This function fetches all the information from a Jira endpoint like `/issues` and exports it to any configured connector (Elastic, Grafana Loki, DataSet).
+This function fetches all the information from a Jira endpoint like `/rest/api/3/search` and exports it to any configured connector (Elastic, Grafana Loki, DataSet).
 
-!!! note annotate "[Endpoint]"  
+!!! note annotate "Endpoint"  
 
     ``` http
     GET /exports/jira
     ```
-
-    [Endpoint]: ../exports/jira "Direct Link"
 
 ## Issues
 

@@ -1,12 +1,10 @@
-This function fetches all the information from a Freshservice endpoint like `/tickets` and exports it to any configured connector (Elastic, Grafana Loki, DataSet).
+This function fetches all the information from a Freshservice endpoint like `/api/v2/tickets` and exports it to any configured connector (Elastic, Grafana Loki, DataSet).
 
-!!! note annotate "[Endpoint]"  
+!!! note annotate "Endpoint"  
 
     ``` http
     GET /exports/fresh
     ```
-
-    [Endpoint]: ../exports/fresh "Direct Link"
 
 ## Tickets
 

@@ -1,12 +1,10 @@
 This function fetches different informations from Bexio.
 
-!!! note annotate "[Endpoint]"  
+!!! note annotate "Endpoint"  
 
     ``` http
     GET /exports/bexio
     ```
-
-    [Endpoint]: ../exports/bexio "Direct Link"
 
 ## Update
 

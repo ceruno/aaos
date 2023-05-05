@@ -1,12 +1,10 @@
-This function fetches all the information from a SentinelOne endpoint like `/agents` and exports it to any configured connector (Elastic, Grafana Loki, DataSet).
+This function fetches all the information from a SentinelOne endpoint like `/web/api/v2.1/agents` and exports it to any configured connector (Elastic, Grafana Loki, DataSet).
 
-!!! note annotate "[Endpoint]"  
+!!! note annotate "Endpoint"  
 
     ``` http
     GET /exports/s1
     ```
-
-    [Endpoint]: ../exports/s1 "Direct Link"
 
 ## Agents
 
