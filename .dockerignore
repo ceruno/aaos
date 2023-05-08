@@ -17,6 +17,7 @@
 **/web
 **/nginx
 **/bin
+**/docs
 **/charts
 **/docker-compose*
 **/compose*

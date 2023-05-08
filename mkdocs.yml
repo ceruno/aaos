@@ -1,0 +1,120 @@
+# Project information
+site_name: AAOS
+site_url: https://ceruno.github.io/aaos/
+site_author: Daniel Riedener
+site_description: >-
+  AAOS means Analysis, Automation and Orchestration System. AAOS is a cloud native web application based on Django, developed by Ceruno AG for different workloads.
+
+# Repository
+repo_name: ceruno/aaos
+repo_url: https://github.com/ceruno/aaos
+
+# Copyright
+copyright: Copyright &copy; 2021 - 2023 Ceruno AG
+
+# Configuration
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/favicon.png
+  icon:
+    logo: material/code-json
+  features:
+    - navigation.tabs
+    - navigation.footer
+    - navigation.indexes
+    - content.code.copy
+
+# Customization
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ceruno
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/ceruno
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/ceruno-ag
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:materialx.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: squidfunk
+      repo: mkdocs-material
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Page tree
+nav:
+    - Home: 
+        - Home: 'index.md'
+        - Installation: 'install.md'
+        - Architecture: 'architecture.md'
+        - Endpoints: 'endpoints.md'
+    - Configuration:
+        - Configuration: 'config/index.md'
+        - Connectors: 'config/connectors.md'
+        - Users: 'config/users.md'
+        - Workloads: 'config/workloads.md'
+    - Exports:
+        - Exports: 'exports/index.md'
+        - Bexio: 'exports/bexio.md'
+        - Freshservice: 'exports/freshservice.md'
+        - Jira: 'exports/jira.md'
+        - Postgres: 'exports/postgres.md'
+        - SentinelOne: 'exports/sentinelone.md'
+    - Analytics: 
+        - SentinelOne: 'analytics/sentinelone.md'
+    - Licensing:
+        - SentinelOne: 'licensing/sentinelone.md'
+
+
+    
