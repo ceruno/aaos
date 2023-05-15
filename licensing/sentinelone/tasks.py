@@ -43,7 +43,7 @@ def usage(args):
             token,
             {
                 "item": "issues",
-                "jql": "labels = SentinelOne AND labels = Licensing AND status!=closed",
+                "jql": "labels = SentinelOne AND labels = Licensing AND status!=done",
             },
         )
         issues_single = asyncio.run(jira_session.getAll())
