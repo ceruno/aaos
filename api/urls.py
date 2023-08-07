@@ -87,7 +87,7 @@ urlpatterns = [
         get_schema_view(
             title="AAOS",
             description="Analysis, Automation and Orchestration System",
-            version="0.1.7",
+            version="0.1.8",
         ),
         name="openapi-schema",
     ),
