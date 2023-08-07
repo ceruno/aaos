@@ -434,7 +434,7 @@ def expiration(args):
                 if (
                     (account["expiration"] != None)
                     and (account["state"] == "active")
-                    and (delta.days <= 30)
+                    and (delta.days <= int(args["timedelta"]))
                 ):
                     subject = (
                         "SentinelOne: Account Expiration Alert - " + account["name"]
@@ -527,7 +527,7 @@ def expiration(args):
                 if (
                     (site["expiration"] != None)
                     and (site["state"] == "active")
-                    and (delta.days <= 30)
+                    and (delta.days <= int(args["timedelta"]))
                 ):
                     subject = (
                         "SentinelOne: Site Expiration Alert - "
@@ -657,7 +657,7 @@ def expiration_fresh(args):
                 if (
                     (account["expiration"] != None)
                     and (account["state"] == "active")
-                    and (delta.days <= 30)
+                    and (delta.days <= int(args["timedelta"]))
                 ):
                     subject = (
                         "SentinelOne: Account Expiration Alert - " + account["name"]
@@ -695,7 +695,7 @@ def expiration_fresh(args):
                 if (
                     (site["expiration"] != None)
                     and (site["state"] == "active")
-                    and (delta.days <= 30)
+                    and (delta.days <= int(args["timedelta"]))
                 ):
                     subject = (
                         "SentinelOne: Site Expiration Alert - "
