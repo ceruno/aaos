@@ -20,8 +20,10 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+
 def redirect_to_docs(request):
     return redirect("/docs/")
+
 
 admin.site.site_header = "AAOS"
 admin.site.site_title = "AAOS"
