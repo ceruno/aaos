@@ -16,7 +16,7 @@ import logging
 
 logger = logging.getLogger("aaos")
 
-bySite = ["exclusions", "groups", "installed-applications"]
+bySite = ["exclusions", "groups", "installed-applications", "application-management/risks/applications"]
 key = bytes(os.environ.get("ENCRYPTION_KEY"), "utf-8")
 f = Fernet(key)
 
