@@ -17,4 +17,5 @@ pytz
 pyyaml
 redis
 shareplum
+tornado>=6.3.3
 uritemplate
