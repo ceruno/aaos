@@ -20,8 +20,10 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
+
 def redirect_to_docs(request):
     return redirect("/docs/")
+
 
 admin.site.site_header = "AAOS"
 admin.site.site_title = "AAOS"
@@ -87,7 +89,7 @@ urlpatterns = [
         get_schema_view(
             title="AAOS",
             description="Analysis, Automation and Orchestration System",
-            version="0.1.8",
+            version="0.1.9",
         ),
         name="openapi-schema",
     ),

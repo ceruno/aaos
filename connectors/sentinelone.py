@@ -55,6 +55,9 @@ class SentinelOneAPI:
                     if "previous" in i["data"]:
                         i["data"]["previous"] = str(i["data"]["previous"])
 
+                if self.item == "application-management/risks/applications":
+                    i["id"] = i["applicationId"]
+
             return (result, cursor)
 
     async def getAll(self):
