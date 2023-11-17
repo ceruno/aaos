@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.12.0-slim
+FROM python:3.11.6-slim
 
 EXPOSE 8000
 
