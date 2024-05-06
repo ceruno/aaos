@@ -1,4 +1,4 @@
-aiohttp>=3.8.6
+aiohttp>=3.9.4
 asyncio>=3.4.3
 celery>=5.3.5
 cryptography>=41.0.5
