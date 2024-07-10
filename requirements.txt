@@ -19,3 +19,4 @@ redis>=5.0.1
 shareplum>=0.5.1
 tornado>=6.3.3
 uritemplate>=4.1.1
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
