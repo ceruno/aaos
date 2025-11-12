@@ -12,11 +12,10 @@ class JiraAPI:
         self.user = config["user"]
         self.token = token
         self.item = args["item"]
-        self.endpoint = "/rest/api/3/search"
+        self.endpoint = "/rest/api/3/search/jql"
         if "jql" in args and args["jql"] != "":
             self.params = {
                 "jql": args["jql"],
-                "startAt": 0,
                 "maxResults": 100,
                 "fields": "*all",
             }
@@ -43,8 +42,11 @@ class JiraAPI:
 
             assert resp.status == 200
             goal = await resp.json()
-            result = goal[self.item]
-            total = goal["total"]
+            result = goal["issues"]
+            cursor = None
+            
+            if goal["isLast"] == False:
+                cursor = goal["nextPageToken"]
 
             for i in result:
                 values = {
@@ -53,7 +55,7 @@ class JiraAPI:
                 }
                 i.update(values)
 
-            return (result, total)
+            return (result, cursor)
 
     async def getAll(self):
 
@@ -65,8 +67,8 @@ class JiraAPI:
             result = await self.get(session)
             results.extend(result[0])
 
-            while self.params["startAt"] <= result[1]:
-                self.params["startAt"] += 100
+            while result[1] != None:
+                self.params.update({"nextPageToken": result[1]})
                 result = await self.get(session)
                 results.extend(result[0])
 
