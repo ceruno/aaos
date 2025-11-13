@@ -1,7 +1,7 @@
 aiohttp==3.9.5
 asyncio==3.4.3
 celery==5.4.0
-cryptography==42.0.7
+cryptography==44.0.1
 django==5.0.6
 django-celery-beat==2.6.0
 django-celery-results==2.5.1
@@ -11,7 +11,7 @@ djangorestframework-simplejwt==5.3.1
 elasticsearch==8.13.1
 elastic-apm==6.22.2
 flower==2.0.1
-gunicorn==22.0.0
+gunicorn==23.0.0
 psycopg2-binary==2.9.9
 pytz==2024.1
 pyyaml==6.0.1
